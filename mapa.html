@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Se incluye el archivo CSS de Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+    crossorigin=""/> 
+    <!-- Vinculamos el archivo CSS "mapa.css" creado por nosotros-->
+    <link rel="stylesheet" type="text/css" href="mapa.css"> 
+    <!-- Vinculamos el archivo CSS del plugin Minimap -->
+    <link rel = "stylesheet" type = "text/css" href = "Leaflet-MiniMap-master/dist/Control.MiniMap.min.css">
+    <!-- Vinculamos el archivo CSS del plugin Legend -->
+    <link rel = "stylesheet" type = "text/css" href = "Leaflet.Legend-master/src/leaflet.legend.css">
+
+    <!-- Titulo en la pestaña de la página-->
+    <title>Mapa de prueba</title>
+    <!-- Titulo arriba del mapa (cabecera)-->
+    <h1>Mapa de prueba</h1>
+
+    <!-- Se crea una selección de lugares, con sus coordenadas como valores.-->
+    <select name="select" id="select">
+        <option value="-1">Seleccione un lugar</option>
+        <option value="6.36,-73.22">Barichara Santander</option>
+        <option value="12.19,-74.14">Cabo de la Vela - Guajira</option>
+    </select>
+
+</head>
+<body>
+
+    <div id = "map"></div>
+    <!-- Se incluye el archivo Javascript de Leaflet -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+    crossorigin=""></script>
+    <!-- Vinculamos el archivo Javascript del plugin Minimap -->
+    <script src = "Leaflet-MiniMap-master/dist/Control.MiniMap.min.js"></script>
+    <!-- Vinculamos el archivo Javascript del plugin Legend -->
+    <script src = "Leaflet.Legend-master/src/leaflet.legend.js"></script>
+    <!-- Vinculamos el archivo Javascript de la capa de areas verdes -->
+    <script src="layers/areas.js"></script>
+    <!-- Vinculamos el archivo Javascript de la capa de zonas de reciclaje -->
+    <script src="layers/reciclaje.js"></script>
+    <!-- Vinculamos el archivo Javascript de la capa de provincias de la 4ta y 5ta región -->
+    <script src="layers/provincias.js"></script>
+    <!-- Vinculamos el archivo Javascript "mapa.js" creado por nosotros -->
+    <script src="mapa.js"></script>
+    
+    
+</body>
+</html>

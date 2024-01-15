@@ -1,0 +1,21 @@
+#map {
+    height: 90vh;
+    width: 100hw;
+}
+
+/* Estilo del titulo. */
+h1 {
+    color:darkblue;
+    font-family: 'Roboto', sans-serif;
+    font-size: 40px;
+    font-weight: 400;
+    line-height: 48px;
+    margin: 0 0 24px 0;
+    text-align: center;
+}
+
+/* Estilo del seleccionador. */
+Select{
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
