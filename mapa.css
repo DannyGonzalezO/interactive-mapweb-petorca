@@ -34,3 +34,13 @@ Select{
     margin: 0 0 5px; 
     color: #777; 
 }
+
+/* Agrega funcionalidad de cursor sobre el Sidebar. */
+#sidebar li:hover{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.hidden {
+    display: none;
+}

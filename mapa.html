@@ -13,27 +13,48 @@
     <link rel = "stylesheet" type = "text/css" href = "Leaflet-MiniMap-master/dist/Control.MiniMap.min.css">
     <!-- Vinculamos el archivo CSS del plugin Legend -->
     <link rel = "stylesheet" type = "text/css" href = "Leaflet.Legend-master/src/leaflet.legend.css">
+    <!-- Vinculamos el archivo CSS de Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <!-- Titulo en la pestaña de la página-->
     <title>Mapa de prueba</title>
     <!-- Titulo arriba del mapa (cabecera)-->
     <h1>Mapa de prueba</h1>
 
-    <!-- Se crea una selección de lugares, con sus coordenadas como valores.-->
+    <!-- Se crea una selección de lugares, con sus coordenadas como valores.
     <select name="select" id="select">
         <option value="-1">Seleccione un lugar</option>
         <option value="6.36,-73.22">Barichara Santander</option>
         <option value="12.19,-74.14">Cabo de la Vela - Guajira</option>
-    </select>
+    </select> -->
 
 </head>
 <body>
+    <!-- Se crea un div con clase "d-flex h-100" para que ubicar la barra lateral -->
+    <div class="d-flex h-100">
+        <div class = "row m-0 w-100">
+            <!-- Se crea un div con id "sidebar" para ubicar la barra lateral -->
+            <div id="sidebar" class="d-flex flex-column justify-content-between col-2 h-100">
+                <!-- Se crea una alerta que no se desplega hasta que sea seleccionada. -->
+                <div id="alert" class="w-100 alert alert-warning fw-bold hidden" role="alert">
+                    
+                </div>
+            </div>
 
-    <div id = "map"></div>
+            <!-- Se crea un div con id "map" donde se mostrará el mapa -->
+            <div id = "map" class="col"></div>
+
+        </div>
+
+    </div>
+
+    
     <!-- Se incluye el archivo Javascript de Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
+    <!-- Se incluye el archivo Javascript con la lista de Sitios (PRUEBA) -->
+    <script src = "./config/sites.js">  </script>
     <!-- Vinculamos el archivo Javascript del plugin Minimap -->
     <script src = "Leaflet-MiniMap-master/dist/Control.MiniMap.min.js"></script>
     <!-- Vinculamos el archivo Javascript del plugin Legend -->

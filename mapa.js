@@ -1,24 +1,29 @@
+/* Agregar referencias */
+const sidebar = document.querySelector('#sidebar');
+const alert = document.querySelector('#alert');
+
 /* Se utiliza la librería Leaflet para mostrar el mapa "map", se definen los parametros ([(latitud),(longitud)], zoom) */
 let map = L.map('map').setView([-32.252505,-70.932757], 12)
 
 /* Se agrega una capa de OpenStreetMap */
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
+    minZoom: 3,
+    maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
 
-/* Función para leer en coordenadas la selección de locaciones. */
-document.getElementById('select').addEventListener('change', function (e) {
-    let coords = e.target.value.split(",");
-    map.flyTo(coords, 13);
-}
-);
+// /* Función para leer en coordenadas la selección de locaciones. */
+// document.getElementById('select').addEventListener('change', function (e) {
+//     let coords = e.target.value.split(",");
+//     map.flyTo(coords, 13);
+// }
+// );
 
-/* Mapa base para el minimapa */
-var carto_light = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {attribution: '©OpenStreetMap, ©CartoDB', subdomains: 'abcd', maxZoom: 24});
+// /* Mapa base para el minimapa */
+// var carto_light = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {attribution: '©OpenStreetMap, ©CartoDB', subdomains: 'abcd', maxZoom: 24});
 
-/* Se agrega el minimapa */
-var minimap = new L.Control.MiniMap(carto_light, { toggleDisplay: true, minimized: false, position: 'bottomleft' }).addTo(map);
+// /* Se agrega el minimapa */
+// var minimap = new L.Control.MiniMap(carto_light, { toggleDisplay: true, minimized: false, position: 'bottomleft' }).addTo(map);
 
 /* Se agrega la escala de distancia */
 new L.control.scale({imperial: false}).addTo(map);
@@ -125,3 +130,48 @@ areasJS = L.geoJson(areas, {
 var reciclajeJS = L.geoJson(reciclaje, {
     onEachFeature: popup
 }).addTo(map);
+
+/* Se agrega función para volar a la coordenada del lugar seleccionado */
+const volar = (coords) => {
+    const zoom = map.getMaxZoom();
+    map.flyTo(coords, zoom);
+}
+
+/* Se agrega función para llamar una alerta que muestre las coordenadas del lugar */
+
+const definirAlert = ([lat, lng]) => {
+    alert.classList.remove('hidden');
+    alert.innerText = `Coordenadas:
+    Latitud: ${lat},
+    Longitud: ${lng}`;
+}
+
+
+/* Limpiar opciones de la barra lateral */
+const limpiarItems = () => {
+    const listadoLi = document.querySelectorAll('li');
+    listadoLi.forEach(li => {
+        li.classList.remove('active');})
+}
+
+/* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
+const crearListado = () => {
+    const ul = document.createElement('ul');
+    ul.classList.add('list-group');
+    sidebar.prepend(ul);
+    sites.forEach(lugar => {
+        const li = document.createElement('li');
+        li.innerText = lugar.nombre;
+        li.classList.add('list-group-item');
+        ul.append(li);
+
+        li.addEventListener('click', () => {
+            limpiarItems();
+            li.classList.add('active');
+            volar(lugar.coordenadas);
+            definirAlert(lugar.coordenadas);
+        })
+    })
+}
+
+crearListado();
