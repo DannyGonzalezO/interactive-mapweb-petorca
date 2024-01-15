@@ -33,17 +33,6 @@ function popup(feature,layer){
 }
 
 
-/* Se agregan las capas GeoJSON*/
-L.geoJson(areas).addTo(map);
-L.geoJson(reciclaje).addTo(map);
-/* En cada click, se hace un popup */
-var areasJS = L.geoJson(areas, {
-    onEachFeature: popup
-}).addTo(map);
-var reciclajeJS = L.geoJson(reciclaje, {
-    onEachFeature: popup
-}).addTo(map);
-
 /* Se agrega la leyenda */
 var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
 legends:[
@@ -67,5 +56,72 @@ legends:[
 ]
 }).addTo(map);
 
+/* Se agrega Control para desplegar datos al pasar el mouse */
+var info = L.control();
+
+/* Se crea un div con este tipo de control */
+info.onAdd = function(map){
+    this._div = L.DomUtil.create('div', 'info');
+    this.update();
+    return this._div;
+};
+
+/* Se actualiza el div con los datos */
+info.update = function(props){
+    this._div.innerHTML = '<h4>Información</h4>' +  (props ?
+        '<b>' + props.Nombre + '</b><br />'
+        : 'Prueba');
+};
+
+info.addTo(map);
+
+/* Se agrega la interacción con el puntero */
+function highlightFeature(e) {
+    var layer = e.target;
+
+    layer.setStyle({
+        weight: 5,
+        color: '#666',
+        dashArray: '',
+        fillOpacity: 0.7
+    });
+
+    info.update(layer.feature.properties);
+
+}
+
+/* Se crean como variables las capas poligonales */
+var areasJS;
+
+/* Se agrega función para resetear el estilo */
+function resetHighlight(e) {
+    areasJS.resetStyle(e.target);
+    info.update();
+}
+
+/* Se agrega función para hacer zoom al hacer click */
+function zoomToFeature(e) {
+    map.fitBounds(e.target.getBounds());
+}
+
+/* Se agrega función para agregar interacción al puntero */
+function onEachFeature(feature, layer) {
+    layer.on({
+    mouseover: highlightFeature,
+    mouseout: resetHighlight,
+    click: zoomToFeature
+    });
+}
 
 
+/* Se agregan las capas GeoJSON*/
+L.geoJson(areas).addTo(map);
+L.geoJson(reciclaje).addTo(map);
+/* En cada click, se hace lo descrito por la funcion onEachFeature */
+areasJS = L.geoJson(areas, {
+    onEachFeature: onEachFeature
+}).addTo(map);
+/* En cada click, se hace un popup */
+var reciclajeJS = L.geoJson(reciclaje, {
+    onEachFeature: popup
+}).addTo(map);
