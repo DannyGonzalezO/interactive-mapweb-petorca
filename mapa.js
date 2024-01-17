@@ -154,37 +154,8 @@ const limpiarItems = () => {
         li.classList.remove('active');})
 }
 
-/* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
-const crearListado = () => {
-    const divAccordion = document.createElement('div');
-    divAccordion.classList.add('accordion');
-    divAccordion.id = 'accordionLugares';
-
-    const divCard = document.createElement('div');
-    divCard.classList.add('accordion-item');
-
-    const h2 = document.createElement('h2');
-    h2.classList.add('accordion-header');
-
-    const button = document.createElement('button');
-    button.classList.add('accordion-button');
-    button.type = 'button';
-    button.dataset.bsToggle = 'collapse';
-    button.dataset.bsTarget = '#collapseLugares';
-    button.setAttribute('aria-expanded', 'true');
-    button.setAttribute('aria-controls', 'collapseLugares');
-    button.innerText = 'Lugares';
-
-    h2.appendChild(button);
-
-    const divCollapse = document.createElement('div');
-    divCollapse.id = 'collapseLugares';
-    divCollapse.classList.add('accordion-collapse', 'collapse');
-    divCollapse.dataset.bsParent = '#accordionLugares';
-
-    const divCardBody = document.createElement('div');
-    divCardBody.classList.add('accordion-body');
-
+/* Crear lista de lugares y volar a la coordenada del lugar seleccionado */
+const crearLista = () => {
     const ul = document.createElement('ul');
     ul.classList.add('list-group');
 
@@ -202,11 +173,42 @@ const crearListado = () => {
         })
     })
 
-    divCardBody.append(ul);
-    divCollapse.append(divCardBody);
-    divCard.append(h2, divCollapse);
-    divAccordion.append(divCard);
-    sidebar.prepend(divAccordion);
+    return ul;
 }
 
-crearListado();
+
+/* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
+function crearListado(titulo,contenido){
+    // Crea un div para el overlay
+    const divOverlay = document.createElement('div');
+    divOverlay.id = 'overlay';
+    divOverlay.classList.add('col-2'); // Add Bootstrap column class
+    divOverlay.style.height = '100%';
+    divOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; 
+    divOverlay.style.color = 'white';
+    divOverlay.style.display = 'none'; // Oculto por default
+    divOverlay.style.zIndex = '1000'; // Para que aparezca sobre el mapa
+
+    // Append the overlay to the row div
+    const row = document.querySelector('.row');
+    row.insertBefore(divOverlay, row.children[1]); // Insert the overlay after the sidebar
+
+    // Move the list of places into the overlay
+    divOverlay.appendChild(contenido);
+
+    const button = document.createElement('button');
+    button.innerText = titulo;
+    button.addEventListener('click', () => {
+        if (divOverlay.style.display === 'none') {
+            divOverlay.style.display = 'block'; // Show the overlay
+        } else {
+            divOverlay.style.display = 'none'; // Hide the overlay
+        }
+    });
+
+    // Append the button to the sidebar
+    const sidebar = document.getElementById('sidebar');
+    sidebar.prepend(button);
+}
+
+crearListado("Lugares", crearLista());
