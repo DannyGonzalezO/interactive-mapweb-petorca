@@ -156,9 +156,38 @@ const limpiarItems = () => {
 
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
 const crearListado = () => {
+    const divAccordion = document.createElement('div');
+    divAccordion.classList.add('accordion');
+    divAccordion.id = 'accordionLugares';
+
+    const divCard = document.createElement('div');
+    divCard.classList.add('accordion-item');
+
+    const h2 = document.createElement('h2');
+    h2.classList.add('accordion-header');
+
+    const button = document.createElement('button');
+    button.classList.add('accordion-button');
+    button.type = 'button';
+    button.dataset.bsToggle = 'collapse';
+    button.dataset.bsTarget = '#collapseLugares';
+    button.setAttribute('aria-expanded', 'true');
+    button.setAttribute('aria-controls', 'collapseLugares');
+    button.innerText = 'Lugares';
+
+    h2.appendChild(button);
+
+    const divCollapse = document.createElement('div');
+    divCollapse.id = 'collapseLugares';
+    divCollapse.classList.add('accordion-collapse', 'collapse');
+    divCollapse.dataset.bsParent = '#accordionLugares';
+
+    const divCardBody = document.createElement('div');
+    divCardBody.classList.add('accordion-body');
+
     const ul = document.createElement('ul');
     ul.classList.add('list-group');
-    sidebar.prepend(ul);
+
     sites.forEach(lugar => {
         const li = document.createElement('li');
         li.innerText = lugar.nombre;
@@ -172,6 +201,12 @@ const crearListado = () => {
             definirAlert(lugar.coordenadas);
         })
     })
+
+    divCardBody.append(ul);
+    divCollapse.append(divCardBody);
+    divCard.append(h2, divCollapse);
+    divAccordion.append(divCard);
+    sidebar.prepend(divAccordion);
 }
 
 crearListado();
