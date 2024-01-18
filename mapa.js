@@ -6,11 +6,20 @@ const alert = document.querySelector('#alert');
 let map = L.map('map').setView([-32.252505,-70.932757], 12)
 
 /* Se agrega una capa de OpenStreetMap */
-L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     minZoom: 3,
     maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 }).addTo(map);
+
+var Esri_WorldImagery = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+	attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+});
+
+var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	maxZoom: 17,
+	attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+});
 
 // /* Función para leer en coordenadas la selección de locaciones. */
 // document.getElementById('select').addEventListener('change', function (e) {
@@ -120,8 +129,8 @@ function onEachFeature(feature, layer) {
 
 
 /* Se agregan las capas GeoJSON*/
-L.geoJson(areas).addTo(map);
-L.geoJson(reciclaje).addTo(map);
+//L.geoJson(areas).addTo(map);
+//L.geoJson(reciclaje).addTo(map);
 /* En cada click, se hace lo descrito por la funcion onEachFeature */
 areasJS = L.geoJson(areas, {
     onEachFeature: onEachFeature
@@ -130,6 +139,14 @@ areasJS = L.geoJson(areas, {
 var reciclajeJS = L.geoJson(reciclaje, {
     onEachFeature: popup
 }).addTo(map);
+
+/* Se agrega una layer para controlar las capas y el basemap */
+var baseMaps = {
+    "OpenStreetMap": osm,
+    "Esri World Imagery": Esri_WorldImagery,
+    "OpenTopoMap": OpenTopoMap
+};
+L.control.layers(baseMaps).addTo(map);
 
 /* Se agrega función para volar a la coordenada del lugar seleccionado */
 const volar = (coords) => {
@@ -176,18 +193,48 @@ const crearLista = () => {
     return ul;
 }
 
+/* Crea lista de capas (areasJS y reciclajeJS), y permita controlar su visibilidad */
+const crearCapas = () => {
+    const div = document.createElement('div');
+
+    // Define your layers
+    const capas = [
+        { name: 'AreasJS', layer: areasJS },
+        { name: 'ReciclajeJS', layer: reciclajeJS }
+    ];
+
+    // Create buttons for each layer
+    capas.forEach(capa => {
+        const button = document.createElement('button');
+        button.innerText = capa.name;
+        button.addEventListener('click', () => {
+            if (map.hasLayer(capa.layer)) {
+                map.removeLayer(capa.layer);
+            } else {
+                map.addLayer(capa.layer);
+            }
+        });
+        div.appendChild(button);
+    });
+
+    return div;
+}
+    
+
 
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
-function crearListado(titulo,contenido){
-    // Crea un div para el overlay
+let currentOverlay = null; // Variable to keep track of the currently open overlay
+
+function crearListado(titulo, contenido) {
+    // Create a div for the overlay
     const divOverlay = document.createElement('div');
-    divOverlay.id = 'overlay';
+    divOverlay.id = 'overlay-' + titulo; // Unique ID for each overlay
     divOverlay.classList.add('col-2'); // Add Bootstrap column class
     divOverlay.style.height = '100%';
-    divOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)'; 
+    divOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     divOverlay.style.color = 'white';
-    divOverlay.style.display = 'none'; // Oculto por default
-    divOverlay.style.zIndex = '1000'; // Para que aparezca sobre el mapa
+    divOverlay.style.display = 'none'; // Hidden by default
+    divOverlay.style.zIndex = '1000'; // To appear above the map
 
     // Append the overlay to the row div
     const row = document.querySelector('.row');
@@ -200,15 +247,34 @@ function crearListado(titulo,contenido){
     button.innerText = titulo;
     button.addEventListener('click', () => {
         if (divOverlay.style.display === 'none') {
+            // If another overlay is open, close it
+            if (currentOverlay) {
+                currentOverlay.style.display = 'none';
+            }
+
             divOverlay.style.display = 'block'; // Show the overlay
+            currentOverlay = divOverlay; // Update the currently open overlay
         } else {
             divOverlay.style.display = 'none'; // Hide the overlay
+            currentOverlay = null; // No overlay is open
         }
     });
 
-    // Append the button to the sidebar
-    const sidebar = document.getElementById('sidebar');
-    sidebar.prepend(button);
+    // Create a container for the buttons if it doesn't exist
+    let buttonContainer = document.getElementById('button-container');
+    if (!buttonContainer) {
+        buttonContainer = document.createElement('div');
+        buttonContainer.id = 'button-container';
+        buttonContainer.style.display = 'flex';
+        buttonContainer.style.flexDirection = 'column';
+        const sidebar = document.getElementById('sidebar');
+        sidebar.appendChild(buttonContainer);
+    }
+
+    // Append the button to the button container
+    buttonContainer.appendChild(button);
 }
 
+crearListado("Capas", crearCapas());
 crearListado("Lugares", crearLista());
+
