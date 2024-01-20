@@ -40,12 +40,17 @@ new L.control.scale({imperial: false}).addTo(map);
 /* Se configuran los popups */
 // ojo que solo funciona para este caso en especifico
 // + "<br/>" + "<strong>Sector: </strong>" + feature.properties.Sector
-function popup(feature,layer){
-    if(feature.properties && feature.properties.Nombre){
-        layer.bindPopup("<strong>Nombre </strong>" + feature.properties.Nombre );
+function popup(feature, layer) {
+    if (feature.properties) {
+        let popupContent = '';
+        for (let prop in feature.properties) {
+            if (prop !== 'id') { // Skip the 'id' property
+                popupContent += `<strong>${prop}:</strong> ${feature.properties[prop]}<br/>`;
+            }
+        }
+        layer.bindPopup(popupContent);
     }
 }
-
 
 /* Se agrega la leyenda */
 var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
@@ -123,7 +128,7 @@ function onEachFeature(feature, layer) {
     layer.on({
     mouseover: highlightFeature,
     mouseout: resetHighlight,
-    click: zoomToFeature
+    click: popup(feature, layer)
     });
 }
 
@@ -137,7 +142,7 @@ areasJS = L.geoJson(areas, {
 }).addTo(map);
 /* En cada click, se hace un popup */
 var reciclajeJS = L.geoJson(reciclaje, {
-    onEachFeature: popup
+    onEachFeature: onEachFeature
 }).addTo(map);
 
 /* Se agrega una layer para controlar las capas y el basemap */
@@ -186,7 +191,7 @@ const crearLista = () => {
             limpiarItems();
             li.classList.add('active');
             volar(lugar.coordenadas);
-            definirAlert(lugar.coordenadas);
+            //definirAlert(lugar.coordenadas);
         })
     })
 
@@ -199,22 +204,28 @@ const crearCapas = () => {
 
     // Define your layers
     const capas = [
-        { name: 'AreasJS', layer: areasJS },
-        { name: 'ReciclajeJS', layer: reciclajeJS }
+        { name: 'Areas Verdes', layer: areasJS },
+        { name: 'Puntos de Reciclaje', layer: reciclajeJS }
     ];
 
-    // Create buttons for each layer
+    // Create checkboxes for each layer
     capas.forEach(capa => {
-        const button = document.createElement('button');
-        button.innerText = capa.name;
-        button.addEventListener('click', () => {
-            if (map.hasLayer(capa.layer)) {
-                map.removeLayer(capa.layer);
-            } else {
+        const label = document.createElement('label');
+        label.innerText = capa.name;
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.checked = map.hasLayer(capa.layer);
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
                 map.addLayer(capa.layer);
+            } else {
+                map.removeLayer(capa.layer);
             }
         });
-        div.appendChild(button);
+
+        label.appendChild(checkbox);
+        div.appendChild(label);
     });
 
     return div;
