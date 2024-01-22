@@ -145,7 +145,7 @@ var reciclajeJS = L.geoJson(reciclaje, {
     onEachFeature: onEachFeature
 }).addTo(map);
 
-/* Se agrega una layer para controlar las capas y el basemap */
+/* Se agrega una layer para controlar el basemap */
 var baseMaps = {
     "OpenStreetMap": osm,
     "Esri World Imagery": Esri_WorldImagery,
@@ -236,10 +236,10 @@ const crearCapas = () => {
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
 let currentOverlay = null; // Variable to keep track of the currently open overlay
 
-function crearListado(titulo, contenido) {
+function crearListado(imagen, contenido) {
     // Create a div for the overlay
     const divOverlay = document.createElement('div');
-    divOverlay.id = 'overlay-' + titulo; // Unique ID for each overlay
+    divOverlay.id = 'overlay-' + imagen; // Unique ID for each overlay
     divOverlay.classList.add('col-2'); // Add Bootstrap column class
     divOverlay.style.height = '100%';
     divOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
@@ -255,7 +255,9 @@ function crearListado(titulo, contenido) {
     divOverlay.appendChild(contenido);
 
     const button = document.createElement('button');
-    button.innerText = titulo;
+    const img = document.createElement('img');
+    img.src = imagen;
+    button.appendChild(img);
     button.addEventListener('click', () => {
         if (divOverlay.style.display === 'none') {
             // If another overlay is open, close it
@@ -286,6 +288,6 @@ function crearListado(titulo, contenido) {
     buttonContainer.appendChild(button);
 }
 
-crearListado("Capas", crearCapas());
-crearListado("Lugares", crearLista());
+crearListado("assets/interface/layers.png", crearCapas());
+crearListado("assets/interface/place.png", crearLista());
 

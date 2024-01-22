@@ -44,3 +44,14 @@ Select{
 .hidden {
     display: none;
 }
+
+/* Estilo del boton de Control de Basemaps. */
+.leaflet-control-layers-toggle {
+    background-image: url(assets/interface/worldwide.png);
+    width: 36px;
+    height: 36px;
+}	
+.leaflet-retina .leaflet-control-layers-toggle {
+    background-image: url(assets/interface/worldwide.png);
+    background-size: 26px 26px;
+}
