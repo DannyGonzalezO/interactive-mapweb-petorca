@@ -1,4 +1,4 @@
-export var comuna_petorca = {
+var comuna_petorca = {
 "type": "FeatureCollection",
 "name": "Comuna Petorca repro",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },

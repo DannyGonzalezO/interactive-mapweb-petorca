@@ -1,4 +1,4 @@
-export var poblados = {
+var poblados = {
 "type": "FeatureCollection",
 "name": "Poblados Petorca repro",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },

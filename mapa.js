@@ -85,9 +85,11 @@ info.onAdd = function(map){
 
 /* Se actualiza el div con los datos */
 info.update = function(props){
-    this._div.innerHTML = '<h4>Información</h4>' +  (props ?
-        '<b>' + props.Nombre + '</b><br />'
-        : 'Pase el mouse sobre un área');
+    if (props && props.Nombre) {
+        this._div.innerHTML = '<h4>Nombre</h4>' + '<b>' + props.Nombre + '</b><br />';
+    } else {
+        this._div.innerHTML = '';
+    }
 };
 
 info.addTo(map);
@@ -152,7 +154,7 @@ function onEachFeature(feature, layer) {
 allData.forEach(function(item) {
     window[item.name + 'JS'] = L.geoJson(item.data, {
         onEachFeature: onEachFeature
-    }).addTo(map);
+    });
 });
 
 
@@ -210,7 +212,7 @@ const crearLista = () => {
     return ul;
 }
 
-/* Crea lista de capas y permita controlar su visibilidad */
+/* Crea lista de capas y permite controlar su visibilidad */
 function crearCapas(capas) {
     const div = document.createElement('div');
 
@@ -221,7 +223,7 @@ function crearCapas(capas) {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.checked = map.hasLayer(capa.layer);
+        checkbox.checked = false; // The layer is not visible initially
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 map.addLayer(capa.layer);
@@ -294,12 +296,13 @@ function crearListado(imagen, contenido) {
     buttonContainer.appendChild(button);
 }
 
-// // Se definen las capas correspondientes a la categoria "Territorios"
-// const capasTerritorios = [
-//     { name: 'Comuna Petorca', layer: comuna_petorcaJS },
-//     { name: 'Comunas 4 y 5 Región', layer: comunas_4_5_regionJS },
-//     { name: 'Límites Unidades Vecinales', layer: limites_uni_vecinalesJS },
-//     { name: 'Poblados', layer: pobladosJS }
-// ];
+// Se definen las capas correspondientes a la categoria "Territorios"
+const capasTerritorios = [
+    { name: 'Comuna Petorca', layer: comuna_petorcaJS },
+    { name: 'Comunas 4 y 5 Región', layer: comunas_4_5_regionJS },
+    { name: 'Límites Unidades Vecinales', layer: limites_uni_vecinalesJS },
+    { name: 'Poblados', layer: pobladosJS }
+];
 
 crearListado("assets/interface/place.png", crearLista());
+crearListado("assets/interface/layers.png", crearCapas(capasTerritorios));

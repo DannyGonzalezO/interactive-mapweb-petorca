@@ -1,4 +1,4 @@
-export var comuna_4_5_region = {
+var comunas_4_5_region = {
 "type": "FeatureCollection",
 "name": "Comunas 4ta y 5ta region repro",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },

@@ -1,4 +1,4 @@
-export var limites_uni_vecinales = {
+var limites_uni_vecinales = {
 "type": "FeatureCollection",
 "name": "Limites Unidades Vecinales Petorca repro",
 "crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
