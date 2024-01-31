@@ -38,8 +38,6 @@ var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
 new L.control.scale({imperial: false}).addTo(map);
 
 /* Se configuran los popups */
-// ojo que solo funciona para este caso en especifico
-// + "<br/>" + "<strong>Sector: </strong>" + feature.properties.Sector
 function popup(feature, layer) {
     if (feature.properties) {
         let popupContent = '';
@@ -52,28 +50,28 @@ function popup(feature, layer) {
     }
 }
 
-/* Se agrega la leyenda */
-var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
-legends:[
-    {
-        label: "Áreas",
-        type: "rectangle",
-        color: "#0074f0",
-        fillColor: "#009ff0",
-        weight: 2,
-        layers: areasJS,areas
-    },
-    {
-        label: "Puntos de reciclaje",
-        type: "point",
-        color: "#0000ff",
-        fillColor: "#0000ff",
-        fillOpacity: 0.5,
-        weight: 1,
-        layers: reciclajeJS,reciclaje
-    }
-]
-}).addTo(map);
+// /* Se agrega la leyenda */
+// var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
+// legends:[
+//     {
+//         label: "Áreas",
+//         type: "rectangle",
+//         color: "#0074f0",
+//         fillColor: "#009ff0",
+//         weight: 2,
+//         layers: areasJS,areas
+//     },
+//     {
+//         label: "Puntos de reciclaje",
+//         type: "point",
+//         color: "#0000ff",
+//         fillColor: "#0000ff",
+//         fillOpacity: 0.5,
+//         weight: 1,
+//         layers: reciclajeJS,reciclaje
+//     }
+// ]
+// }).addTo(map);
 
 /* Se agrega Control para desplegar datos al pasar el mouse */
 var info = L.control();
@@ -89,7 +87,7 @@ info.onAdd = function(map){
 info.update = function(props){
     this._div.innerHTML = '<h4>Información</h4>' +  (props ?
         '<b>' + props.Nombre + '</b><br />'
-        : 'Prueba');
+        : 'Pase el mouse sobre un área');
 };
 
 info.addTo(map);
@@ -110,11 +108,24 @@ function highlightFeature(e) {
 }
 
 /* Se crean como variables las capas poligonales */
-var areasJS;
+var comuna_petorcaJS;
+var comunas_4_5_regionJS;
+var limites_uni_vecinalesJS;
+var pobladosJS;
+
+/* Se crea un arreglo con todos los datos GeoJSON */
+var allData = [
+    { name: 'comuna_petorca', data: comuna_petorca },
+    { name: 'comunas_4_5_region', data: comunas_4_5_region },
+    { name: 'limites_uni_vecinales', data: limites_uni_vecinales },
+    { name: 'poblados', data: poblados }
+];
 
 /* Se agrega función para resetear el estilo */
 function resetHighlight(e) {
-    areasJS.resetStyle(e.target);
+    allData.forEach(function(item) {
+        window[item.name + 'JS'].resetStyle(e.target);
+    });
     info.update();
 }
 
@@ -137,13 +148,14 @@ function onEachFeature(feature, layer) {
 //L.geoJson(areas).addTo(map);
 //L.geoJson(reciclaje).addTo(map);
 /* En cada click, se hace lo descrito por la funcion onEachFeature */
-areasJS = L.geoJson(areas, {
-    onEachFeature: onEachFeature
-}).addTo(map);
-/* En cada click, se hace un popup */
-var reciclajeJS = L.geoJson(reciclaje, {
-    onEachFeature: onEachFeature
-}).addTo(map);
+/* Se crea una capa para cada conjunto de datos GeoJSON */
+allData.forEach(function(item) {
+    window[item.name + 'JS'] = L.geoJson(item.data, {
+        onEachFeature: onEachFeature
+    }).addTo(map);
+});
+
+
 
 /* Se agrega una layer para controlar el basemap */
 var baseMaps = {
@@ -198,15 +210,9 @@ const crearLista = () => {
     return ul;
 }
 
-/* Crea lista de capas (areasJS y reciclajeJS), y permita controlar su visibilidad */
-const crearCapas = () => {
+/* Crea lista de capas y permita controlar su visibilidad */
+function crearCapas(capas) {
     const div = document.createElement('div');
-
-    // Define your layers
-    const capas = [
-        { name: 'Areas Verdes', layer: areasJS },
-        { name: 'Puntos de Reciclaje', layer: reciclajeJS }
-    ];
 
     // Create checkboxes for each layer
     capas.forEach(capa => {
@@ -288,6 +294,12 @@ function crearListado(imagen, contenido) {
     buttonContainer.appendChild(button);
 }
 
-crearListado("assets/interface/layers.png", crearCapas());
-crearListado("assets/interface/place.png", crearLista());
+// // Se definen las capas correspondientes a la categoria "Territorios"
+// const capasTerritorios = [
+//     { name: 'Comuna Petorca', layer: comuna_petorcaJS },
+//     { name: 'Comunas 4 y 5 Región', layer: comunas_4_5_regionJS },
+//     { name: 'Límites Unidades Vecinales', layer: limites_uni_vecinalesJS },
+//     { name: 'Poblados', layer: pobladosJS }
+// ];
 
+crearListado("assets/interface/place.png", crearLista());
