@@ -83,12 +83,14 @@ info.onAdd = function(map){
     return this._div;
 };
 
-/* Se actualiza el div con los datos */
+/* Se actualiza el div con los datos, si la capa no tiene nombre, no se muestra info */
 info.update = function(props){
     if (props && props.Nombre) {
         this._div.innerHTML = '<h4>Nombre</h4>' + '<b>' + props.Nombre + '</b><br />';
+        this._div.style.display = 'block'; // Show the div
     } else {
         this._div.innerHTML = '';
+        this._div.style.display = 'none'; // Hide the div
     }
 };
 
@@ -232,7 +234,7 @@ function crearCapas(capas) {
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
 let currentOverlay = null; // Variable to keep track of the currently open overlay
 
-function crearListado(imagen, contenido) {
+function crearListado(imagen, titulo, contenido) {
     // Create a div for the overlay
     const divOverlay = document.createElement('div');
     divOverlay.id = 'overlay-' + imagen; // Unique ID for each overlay
@@ -257,9 +259,16 @@ function crearListado(imagen, contenido) {
     divOverlay.appendChild(contenido);
 
     const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-secondary';
+    button.dataset.toggle = 'tooltip';
+    button.dataset.placement = 'right';
+    button.title = titulo;
     const img = document.createElement('img');
     img.src = imagen;
+    img.title = titulo;
     button.appendChild(img);
+    
     button.addEventListener('click', () => {
         if (divOverlay.style.display === 'none') {
             // If another overlay is open, close it
@@ -289,7 +298,12 @@ function crearListado(imagen, contenido) {
 
     // Append the button to the button container
     buttonContainer.appendChild(button);
+
 }
+
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 
 // Se definen las capas correspondientes a la categoria "Territorios"
 // // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
@@ -300,5 +314,5 @@ const capasTerritorios = [
     { name: 'Poblados', layer: pobladosJS }
 ];
 
-crearListado("assets/interface/place.png", crearLista());
-crearListado("assets/interface/territories.png", crearCapas(capasTerritorios));
+crearListado("assets/interface/place.png", 'Lugares', crearLista());
+crearListado("assets/interface/territories.png", 'Territorios', crearCapas(capasTerritorios));
