@@ -109,19 +109,7 @@ function highlightFeature(e) {
 
 }
 
-/* Se crean como variables las capas poligonales */
-var comuna_petorcaJS;
-var comunas_4_5_regionJS;
-var limites_uni_vecinalesJS;
-var pobladosJS;
 
-/* Se crea un arreglo con todos los datos GeoJSON */
-var allData = [
-    { name: 'comuna_petorca', data: comuna_petorca },
-    { name: 'comunas_4_5_region', data: comunas_4_5_region },
-    { name: 'limites_uni_vecinales', data: limites_uni_vecinales },
-    { name: 'poblados', data: poblados }
-];
 
 /* Se agrega función para resetear el estilo */
 function resetHighlight(e) {
@@ -175,12 +163,12 @@ const volar = (coords) => {
 
 /* Se agrega función para llamar una alerta que muestre las coordenadas del lugar */
 
-const definirAlert = ([lat, lng]) => {
-    alert.classList.remove('hidden');
-    alert.innerText = `Coordenadas:
-    Latitud: ${lat},
-    Longitud: ${lng}`;
-}
+// const definirAlert = ([lat, lng]) => {
+//     alert.classList.remove('hidden');
+//     alert.innerText = `Coordenadas:
+//     Latitud: ${lat},
+//     Longitud: ${lng}`;
+// }
 
 
 /* Limpiar opciones de la barra lateral */
@@ -250,10 +238,16 @@ function crearListado(imagen, contenido) {
     divOverlay.id = 'overlay-' + imagen; // Unique ID for each overlay
     divOverlay.classList.add('col-2'); // Add Bootstrap column class
     divOverlay.style.height = '100%';
+    divOverlay.style.width = '250px';
     divOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     divOverlay.style.color = 'white';
     divOverlay.style.display = 'none'; // Hidden by default
     divOverlay.style.zIndex = '1000'; // To appear above the map
+    if (window.innerWidth <= 400) { // If the screen width is 600px or less
+        divOverlay.style.width = '20%'; // Use 100% width
+    } else {
+        divOverlay.style.width = '250px'; // Use 250px width
+    }
 
     // Append the overlay to the row div
     const row = document.querySelector('.row');
@@ -288,6 +282,7 @@ function crearListado(imagen, contenido) {
         buttonContainer.id = 'button-container';
         buttonContainer.style.display = 'flex';
         buttonContainer.style.flexDirection = 'column';
+        buttonContainer.style.overflow = 'auto';
         const sidebar = document.getElementById('sidebar');
         sidebar.appendChild(buttonContainer);
     }
@@ -297,6 +292,7 @@ function crearListado(imagen, contenido) {
 }
 
 // Se definen las capas correspondientes a la categoria "Territorios"
+// // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
 const capasTerritorios = [
     { name: 'Comuna Petorca', layer: comuna_petorcaJS },
     { name: 'Comunas 4 y 5 Región', layer: comunas_4_5_regionJS },
@@ -305,4 +301,4 @@ const capasTerritorios = [
 ];
 
 crearListado("assets/interface/place.png", crearLista());
-crearListado("assets/interface/layers.png", crearCapas(capasTerritorios));
+crearListado("assets/interface/territories.png", crearCapas(capasTerritorios));
