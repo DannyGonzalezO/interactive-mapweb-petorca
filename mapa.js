@@ -264,6 +264,7 @@ function crearListado(imagen, titulo,color, contenido) {
     button.dataset.toggle = 'tooltip';
     button.dataset.placement = 'right';
     button.title = titulo;
+    button.style.borderRadius = '0';
     const img = document.createElement('img');
     img.src = imagen;
     img.title = titulo;
@@ -307,6 +308,44 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   })
 
+/* Función para crear acordeones dentro del overlay de la barra lateral */
+function crearAcordeon(titulo, contenidoElemento) {
+    // Crear el elemento del acordeón
+    const accordionItem = document.createElement('div');
+    accordionItem.classList.add('accordion-item');
+
+    // Crear el encabezado del acordeón
+    const accordionHeader = document.createElement('h2');
+    accordionHeader.classList.add('accordion-header');
+    accordionHeader.id = `${titulo}-header`;
+
+    // Crear el botón del acordeón
+    const button = document.createElement('button');
+    button.classList.add('accordion-button', 'collapsed');
+    button.type = 'button';
+    button.dataset.bsToggle = 'collapse';
+    //button.dataset.bsTarget = `#${titulo}-collapse`;
+    button.textContent = titulo;
+
+    // Crear el contenido del acordeón
+    const accordionCollapse = document.createElement('div');
+    //accordionCollapse.id = `${titulo}-collapse`;
+    accordionCollapse.classList.add('accordion-collapse', 'collapse');
+    //accordionCollapse.setAttribute('aria-labelledby', `${titulo}-header`);
+    accordionCollapse.dataset.bsParent = '#accordionExample';
+
+    const accordionBody = document.createElement('div');
+    accordionBody.classList.add('accordion-body');
+    accordionBody.appendChild(contenidoElemento); // Agregar el contenido como un elemento del DOM
+
+    // Agregar los elementos al acordeón
+    accordionCollapse.appendChild(accordionBody);
+    accordionHeader.appendChild(button);
+    accordionItem.appendChild(accordionHeader);
+    accordionItem.appendChild(accordionCollapse);
+
+    return accordionItem;
+}
 // Se definen las capas correspondientes a la categoria "Territorios"
 // // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
 const capasTerritorios = [
@@ -339,8 +378,51 @@ const capasHidrologia = [
 
 ];
 
+const capasComunicacion = [
+    { name: 'Antenas de servicio en Petorca', layer: antenas_servicio_petorcaJS }
+];
+
+const capasEducacion = [
+    { name: 'Establecimientos de educación parvularia', layer: estab_educ_parvulariaJS },
+    { name: 'Establecimientos educacionales', layer: estab_educacionalesJS },
+    { name: 'Jardines infantiles JUNJI', layer: jardines_infantiles_junjiJS },
+    { name: 'Jardines INTEGRA', layer: jardines_integraJS },
+];
+
+const capasSalud = [
+    { name: 'Establecimientos de salud', layer: estab_saludJS }
+];
+
+const capasSeguridad = [
+    { name: 'Carabineros', layer: carabinerosJS },
+    { name: 'Compañías de bomberos', layer: compañias_bomberosJS },
+    { name: 'Grifos', layer: grifosJS },
+    { name: 'Municipalidad', layer: municipalidadJS }
+];
+
+/*
+/* Crear el contenedor para los acordeones de Servicios Esenciales */
+const esencialesContainer = document.createElement('div');
+esencialesContainer.id = 'esenciales-container';
+esencialesContainer.className = 'accordion';
+
+/* Crear los acordeones
+const acordeonComunicacion = crearAcordeon('Comunicación', capasComunicacion);
+const acordeonEducacion = crearAcordeon('Educación', capasEducacion);
+const acordeonSalud = crearAcordeon('Salud', capasSalud);
+const acordeonSeguridad = crearAcordeon('Seguridad', capasSeguridad);
+
+// Agregar los acordeones al contenedor
+esencialesContainer.appendChild(acordeonComunicacion);
+esencialesContainer.appendChild(acordeonEducacion);
+esencialesContainer.appendChild(acordeonSalud);
+esencialesContainer.appendChild(acordeonSeguridad);
+*/
+
 crearListado("assets/interface/place.png", 'Lugares', '#f39890', crearLista());
+crearListado("assets/interface/public-service.png", 'Servicios Esenciales','#f5b289', crearCapas(capasComunicacion));
 crearListado("assets/interface/territories.png", 'Territorios','#ffee93', crearCapas(capasTerritorios));
 crearListado("assets/interface/sustainable.png", 'Sustentabilidad','#b9e7aa', crearCapas(capasSustentabilidad));
 crearListado("assets/interface/save-water.png", 'Hidrología','#a0ced9', crearCapas(capasHidrologia));
+
 // naranjo: f5b289 celeste: a0ced9 paleta de https://coolors.co/b9e7aa

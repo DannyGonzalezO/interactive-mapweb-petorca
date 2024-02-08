@@ -19,6 +19,17 @@ var estaciones_calidad_de_aguaJS;
 var obras_subt_reg_meeJS;
 var obras_subt_reg_mee_cuenca_rioJS;
 var plantas_tratamiento_aguas_servidas_esvalJS;
+var antenas_servicio_petorcaJS;
+var estab_educ_parvulariaJS;
+var estab_educacionalesJS;
+var jardines_infantiles_junjiJS;
+var jardines_integraJS;
+var estab_saludJS;
+var carabinerosJS;
+var compañias_bomberosJS;
+var grifosJS;
+var municipalidadJS;
+
 
 /* Se crea un arreglo con todos los datos GeoJSON */
 const allData = [
@@ -41,7 +52,17 @@ const allData = [
     { name: 'estaciones_calidad_de_agua', data: estaciones_calidad_de_agua },
     { name: 'obras_subt_reg_mee', data: obras_subt_reg_mee },
     { name: 'obras_subt_reg_mee_cuenca_rio', data: obras_subt_reg_mee_cuenca_rio },
-    { name: 'plantas_tratamiento_aguas_servidas_esval', data: plantas_tratamiento_aguas_servidas_esval }
+    { name: 'plantas_tratamiento_aguas_servidas_esval', data: plantas_tratamiento_aguas_servidas_esval },
+    { name: 'antenas_servicio_petorca', data: antenas_servicio_petorca },
+    { name: 'estab_educ_parvularia', data: estab_educ_parvularia },
+    { name: 'estab_educacionales', data: estab_educacionales },
+    { name: 'jardines_infantiles_junji', data: jardines_infantiles_junji },
+    { name: 'jardines_integra', data: jardines_integra },
+    { name: 'estab_salud', data: estab_salud },
+    { name: 'carabineros', data: carabineros },
+    { name: 'compañias_bomberos', data: compañias_bomberos },
+    { name: 'grifos', data: grifos },
+    { name: 'municipalidad', data: municipalidad }
 ];
 
 
