@@ -1,5 +1,5 @@
 #map {
-    height: 90vh;
+    height: 100vh;
     width: 100hw;
 }
 
@@ -58,11 +58,12 @@ Select{
 }
 
 #sidebar {
-    width: 150px; /* Establece el ancho de la barra lateral */
+    width: 128px; /* Establece el ancho de la barra lateral */
     overflow: auto; /* Asegura que el contenido no se desborde */
 }
 
 #button-container {
+    margin: 5px 0px 0px; 
     width: 100%; /* Asegura que el contenedor de botones no sea más ancho que la barra lateral */
     overflow: auto; /* Asegura que los botones no se desborden */
 }

@@ -234,7 +234,7 @@ function crearCapas(capas) {
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
 let currentOverlay = null; // Variable to keep track of the currently open overlay
 
-function crearListado(imagen, titulo, contenido) {
+function crearListado(imagen, titulo,color, contenido) {
     // Create a div for the overlay
     const divOverlay = document.createElement('div');
     divOverlay.id = 'overlay-' + imagen; // Unique ID for each overlay
@@ -268,6 +268,8 @@ function crearListado(imagen, titulo, contenido) {
     img.src = imagen;
     img.title = titulo;
     button.appendChild(img);
+    button.style.backgroundColor = color;
+    
     
     button.addEventListener('click', () => {
         if (divOverlay.style.display === 'none') {
@@ -309,10 +311,36 @@ $(function () {
 // // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
 const capasTerritorios = [
     { name: 'Comuna Petorca', layer: comuna_petorcaJS },
-    { name: 'Comunas 4 y 5 Región', layer: comunas_4_5_regionJS },
+    { name: 'Comunas IV y V Región', layer: comunas_4_5_regionJS },
     { name: 'Límites Unidades Vecinales', layer: limites_uni_vecinalesJS },
     { name: 'Poblados', layer: pobladosJS }
 ];
 
-crearListado("assets/interface/place.png", 'Lugares', crearLista());
-crearListado("assets/interface/territories.png", 'Territorios', crearCapas(capasTerritorios));
+const capasSustentabilidad = [
+    { name: 'Áreas verdes', layer: areasverdesJS },
+    { name: 'Clima Koppen en Petorca', layer: climakoppenJS },
+    { name: 'Estadísticas fluviométricas vigentes con datos', layer: fluviometricasJS },
+    { name: 'Estadísticas meteorologicas vigentes con datos', layer: meteorologicasJS },
+    { name: 'Humedales', layer: humedalesJS },
+    { name: 'Formaciones vegetacionales Gajardo', layer: vegetacionalesJS }
+];
+
+const capasHidrologia = [
+    { name: 'Sistemas de Servicio Sanitario Rural, SSR (ex APR)', layer: apr_ssrJS },
+    { name: 'CASUB: Comunidad de Aguas Subterráneas', layer: casub_plqJS },
+    { name: 'Cuenca completa río Petorca', layer: cuenca_rio_petorcaJS },
+    { name: 'DAA cuenca río Petorca 1956', layer: daa_cuenca_rio_petorca_1956JS },
+    { name: 'DAA cuenca río Petorca 1969', layer: daa_cuenca_rio_petorca_1969JS },
+    { name: 'DAA cuenca río Petorca 1984', layer: daa_cuenca_rio_petorca_1984JS },
+    { name: 'Estaciones calidad de agua', layer: estaciones_calidad_de_aguaJS },
+    { name: 'Obras subt registradas MEE comuna de Petorca', layer: obras_subt_reg_meeJS },
+    { name: 'Obras subt registradas MEE cuenca del río Petorca', layer: obras_subt_reg_mee_cuenca_rioJS },
+    { name: 'Plantas de tratamiento de aguas servidas ESVAL', layer: plantas_tratamiento_aguas_servidas_esvalJS }
+
+];
+
+crearListado("assets/interface/place.png", 'Lugares', '#f39890', crearLista());
+crearListado("assets/interface/territories.png", 'Territorios','#ffee93', crearCapas(capasTerritorios));
+crearListado("assets/interface/sustainable.png", 'Sustentabilidad','#b9e7aa', crearCapas(capasSustentabilidad));
+crearListado("assets/interface/save-water.png", 'Hidrología','#a0ced9', crearCapas(capasHidrologia));
+// naranjo: f5b289 celeste: a0ced9 paleta de https://coolors.co/b9e7aa
