@@ -203,7 +203,7 @@ const crearLista = () => {
 }
 
 /* Crea lista de capas y permite controlar su visibilidad */
-function crearCapas(capas) {
+function crearCapas(capas,color) {
     const div = document.createElement('div');
 
     // Create checkboxes for each layer
@@ -214,6 +214,7 @@ function crearCapas(capas) {
         label.style.paddingLeft = '35px';
         label.style.cursor = 'pointer';
         label.style.marginTop = '5px';
+    
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
@@ -235,11 +236,12 @@ function crearCapas(capas) {
         customCheckbox.style.height = '20px';
         customCheckbox.style.border = '2px solid #000';
         customCheckbox.style.borderRadius = '50%';
+        customCheckbox.style.marginTop = '5px';
         
 
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
-                customCheckbox.style.background = '#000';
+                customCheckbox.style.background = color;
             } else {
                 customCheckbox.style.background = 'none';
             }
@@ -444,12 +446,21 @@ const capasSeguridad = [
     { name: 'Municipalidad', layer: municipalidadJS }
 ];
 
-/* Se crean los acordeones con las capas de las subcategorias de servicios esenciales */
-const acordeonComunicacion = crearAcordeon('Comunicación',crearCapas(capasComunicacion));
-const acordeonEducacion = crearAcordeon('Educación',crearCapas(capasEducacion));
-const acordeonSalud = crearAcordeon('Salud',crearCapas(capasSalud));
-const acordeonSeguridad = crearAcordeon('Seguridad',crearCapas(capasSeguridad));
+/* Se crean los colores para la sidebar */
+const colorLugares = '#f39890';
+const colorServicios = '#f5b289';
+const colorTerritorios = '#ffee93';
+const colorSustentabilidad = '#b9e7aa'; 
+const colorHidrologia = '#a0ced9';
 
+
+/* Se crean los acordeones con las capas de las subcategorias de servicios esenciales */
+const acordeonComunicacion = crearAcordeon('Comunicación',crearCapas(capasComunicacion,colorServicios));
+const acordeonEducacion = crearAcordeon('Educación',crearCapas(capasEducacion,colorServicios));
+const acordeonSalud = crearAcordeon('Salud',crearCapas(capasSalud,colorServicios));
+const acordeonSeguridad = crearAcordeon('Seguridad',crearCapas(capasSeguridad,colorServicios));
+
+/* Se crea el contenedor de los acordeones */
 const contenedorServicios = document.createElement('div');
 contenedorServicios.appendChild(acordeonComunicacion);
 contenedorServicios.appendChild(acordeonEducacion);
@@ -459,10 +470,11 @@ contenedorServicios.appendChild(acordeonSeguridad);
 
 
 
-crearListado("assets/interface/place.png", 'Lugares', '#f39890', crearLista());
-crearListado("assets/interface/public-service.png", 'Servicios Esenciales','#f5b289', contenedorServicios);
-crearListado("assets/interface/territories.png", 'Territorios','#ffee93', crearCapas(capasTerritorios));
-crearListado("assets/interface/sustainable.png", 'Sustentabilidad','#b9e7aa', crearCapas(capasSustentabilidad));
-crearListado("assets/interface/save-water.png", 'Hidrología','#a0ced9', crearCapas(capasHidrologia));
+
+crearListado("assets/interface/place.png", 'Lugares', colorLugares, crearLista());
+crearListado("assets/interface/public-service.png", 'Servicios Esenciales',colorServicios, contenedorServicios);
+crearListado("assets/interface/territories.png", 'Territorios',colorTerritorios, crearCapas(capasTerritorios,colorTerritorios));
+crearListado("assets/interface/sustainable.png", 'Sustentabilidad',colorSustentabilidad, crearCapas(capasSustentabilidad,colorSustentabilidad));
+crearListado("assets/interface/save-water.png", 'Hidrología',colorHidrologia, crearCapas(capasHidrologia,colorHidrologia));
 
 // naranjo: f5b289 celeste: a0ced9 paleta de https://coolors.co/b9e7aa
