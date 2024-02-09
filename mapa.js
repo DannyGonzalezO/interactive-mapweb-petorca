@@ -210,10 +210,15 @@ function crearCapas(capas) {
     capas.forEach(capa => {
         const label = document.createElement('label');
         label.innerText = capa.name;
+        label.style.position = 'relative';
+        label.style.paddingLeft = '35px';
+        label.style.cursor = 'pointer';
+        label.style.marginTop = '5px';
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = false; // The layer is not visible initially
+        checkbox.style.display = 'none';
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 map.addLayer(capa.layer);
@@ -222,11 +227,72 @@ function crearCapas(capas) {
             }
         });
 
+        const customCheckbox = document.createElement('span');
+        customCheckbox.style.position = 'absolute';
+        customCheckbox.style.left = '0';
+        customCheckbox.style.top = '0';
+        customCheckbox.style.width = '20px';
+        customCheckbox.style.height = '20px';
+        customCheckbox.style.border = '2px solid #000';
+        customCheckbox.style.borderRadius = '50%';
+        
+
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                customCheckbox.style.background = '#000';
+            } else {
+                customCheckbox.style.background = 'none';
+            }
+        });
+
         label.appendChild(checkbox);
+        label.appendChild(customCheckbox);
         div.appendChild(label);
+        // Add a break element
+        const br = document.createElement('br');
+        div.appendChild(br);
     });
 
     return div;
+}
+
+/* Crea un acordeón con el título y el contenido especificados */
+function crearAcordeon(titulo, contenido) {
+    // Crear el elemento del acordeón
+    const accordionItem = document.createElement('div');
+    accordionItem.classList.add('accordion-item');
+
+    // Crear el encabezado del acordeón
+    const accordionHeader = document.createElement('h2');
+    accordionHeader.classList.add('accordion-header');
+    accordionHeader.id = `${titulo}-header`;
+
+    // Crear el botón del acordeón
+    const button = document.createElement('button');
+    button.classList.add('accordion-button', 'collapsed');
+    button.type = 'button';
+    button.dataset.bsToggle = 'collapse';
+    button.dataset.bsTarget = `#${titulo}-collapse`;
+    button.textContent = titulo;
+
+    // Crear el contenido del acordeón
+    const accordionCollapse = document.createElement('div');
+    accordionCollapse.id = `${titulo}-collapse`;
+    accordionCollapse.classList.add('accordion-collapse', 'collapse');
+    accordionCollapse.setAttribute('aria-labelledby', `${titulo}-header`);
+    accordionCollapse.dataset.bsParent = '#accordionExample';
+
+    const accordionBody = document.createElement('div');
+    accordionBody.classList.add('accordion-body');
+    accordionBody.appendChild(contenido); // Agregar el contenido como un elemento del DOM
+
+    // Agregar los elementos al acordeón
+    accordionCollapse.appendChild(accordionBody);
+    accordionHeader.appendChild(button);
+    accordionItem.appendChild(accordionHeader);
+    accordionItem.appendChild(accordionCollapse);
+
+    return accordionItem;
 }
     
 
@@ -245,11 +311,26 @@ function crearListado(imagen, titulo,color, contenido) {
     divOverlay.style.color = 'white';
     divOverlay.style.display = 'none'; // Hidden by default
     divOverlay.style.zIndex = '1000'; // To appear above the map
+    divOverlay.style.padding = '0';
     if (window.innerWidth <= 400) { // If the screen width is 600px or less
         divOverlay.style.width = '20%'; // Use 100% width
     } else {
         divOverlay.style.width = '250px'; // Use 250px width
     }
+
+    // Create a title element
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = titulo;
+    titleElement.style.color = 'black'; 
+    titleElement.style.backgroundColor = color
+    titleElement.style.boxSizing = 'border-box';
+    titleElement.style.width = '100%';
+    //justify the text
+    titleElement.style.textAlign = 'center';
+
+
+    // Append the title to the overlay
+    divOverlay.appendChild(titleElement);
 
     // Append the overlay to the row div
     const row = document.querySelector('.row');
@@ -308,44 +389,7 @@ $(function () {
     $('[data-toggle="tooltip"]').tooltip()
   })
 
-/* Función para crear acordeones dentro del overlay de la barra lateral */
-function crearAcordeon(titulo, contenidoElemento) {
-    // Crear el elemento del acordeón
-    const accordionItem = document.createElement('div');
-    accordionItem.classList.add('accordion-item');
 
-    // Crear el encabezado del acordeón
-    const accordionHeader = document.createElement('h2');
-    accordionHeader.classList.add('accordion-header');
-    accordionHeader.id = `${titulo}-header`;
-
-    // Crear el botón del acordeón
-    const button = document.createElement('button');
-    button.classList.add('accordion-button', 'collapsed');
-    button.type = 'button';
-    button.dataset.bsToggle = 'collapse';
-    //button.dataset.bsTarget = `#${titulo}-collapse`;
-    button.textContent = titulo;
-
-    // Crear el contenido del acordeón
-    const accordionCollapse = document.createElement('div');
-    //accordionCollapse.id = `${titulo}-collapse`;
-    accordionCollapse.classList.add('accordion-collapse', 'collapse');
-    //accordionCollapse.setAttribute('aria-labelledby', `${titulo}-header`);
-    accordionCollapse.dataset.bsParent = '#accordionExample';
-
-    const accordionBody = document.createElement('div');
-    accordionBody.classList.add('accordion-body');
-    accordionBody.appendChild(contenidoElemento); // Agregar el contenido como un elemento del DOM
-
-    // Agregar los elementos al acordeón
-    accordionCollapse.appendChild(accordionBody);
-    accordionHeader.appendChild(button);
-    accordionItem.appendChild(accordionHeader);
-    accordionItem.appendChild(accordionCollapse);
-
-    return accordionItem;
-}
 // Se definen las capas correspondientes a la categoria "Territorios"
 // // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
 const capasTerritorios = [
@@ -400,27 +444,23 @@ const capasSeguridad = [
     { name: 'Municipalidad', layer: municipalidadJS }
 ];
 
-/*
-/* Crear el contenedor para los acordeones de Servicios Esenciales */
-const esencialesContainer = document.createElement('div');
-esencialesContainer.id = 'esenciales-container';
-esencialesContainer.className = 'accordion';
+/* Se crean los acordeones con las capas de las subcategorias de servicios esenciales */
+const acordeonComunicacion = crearAcordeon('Comunicación',crearCapas(capasComunicacion));
+const acordeonEducacion = crearAcordeon('Educación',crearCapas(capasEducacion));
+const acordeonSalud = crearAcordeon('Salud',crearCapas(capasSalud));
+const acordeonSeguridad = crearAcordeon('Seguridad',crearCapas(capasSeguridad));
 
-/* Crear los acordeones
-const acordeonComunicacion = crearAcordeon('Comunicación', capasComunicacion);
-const acordeonEducacion = crearAcordeon('Educación', capasEducacion);
-const acordeonSalud = crearAcordeon('Salud', capasSalud);
-const acordeonSeguridad = crearAcordeon('Seguridad', capasSeguridad);
+const contenedorServicios = document.createElement('div');
+contenedorServicios.appendChild(acordeonComunicacion);
+contenedorServicios.appendChild(acordeonEducacion);
+contenedorServicios.appendChild(acordeonSalud);
+contenedorServicios.appendChild(acordeonSeguridad);
 
-// Agregar los acordeones al contenedor
-esencialesContainer.appendChild(acordeonComunicacion);
-esencialesContainer.appendChild(acordeonEducacion);
-esencialesContainer.appendChild(acordeonSalud);
-esencialesContainer.appendChild(acordeonSeguridad);
-*/
+
+
 
 crearListado("assets/interface/place.png", 'Lugares', '#f39890', crearLista());
-crearListado("assets/interface/public-service.png", 'Servicios Esenciales','#f5b289', crearCapas(capasComunicacion));
+crearListado("assets/interface/public-service.png", 'Servicios Esenciales','#f5b289', contenedorServicios);
 crearListado("assets/interface/territories.png", 'Territorios','#ffee93', crearCapas(capasTerritorios));
 crearListado("assets/interface/sustainable.png", 'Sustentabilidad','#b9e7aa', crearCapas(capasSustentabilidad));
 crearListado("assets/interface/save-water.png", 'Hidrología','#a0ced9', crearCapas(capasHidrologia));
