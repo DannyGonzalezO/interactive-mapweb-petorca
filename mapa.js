@@ -38,8 +38,6 @@ var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
 new L.control.scale({imperial: false}).addTo(map);
 
 /* Se configuran los popups */
-// ojo que solo funciona para este caso en especifico
-// + "<br/>" + "<strong>Sector: </strong>" + feature.properties.Sector
 function popup(feature, layer) {
     if (feature.properties) {
         let popupContent = '';
@@ -52,28 +50,28 @@ function popup(feature, layer) {
     }
 }
 
-/* Se agrega la leyenda */
-var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
-legends:[
-    {
-        label: "Áreas",
-        type: "rectangle",
-        color: "#0074f0",
-        fillColor: "#009ff0",
-        weight: 2,
-        layers: areasJS,areas
-    },
-    {
-        label: "Puntos de reciclaje",
-        type: "point",
-        color: "#0000ff",
-        fillColor: "#0000ff",
-        fillOpacity: 0.5,
-        weight: 1,
-        layers: reciclajeJS,reciclaje
-    }
-]
-}).addTo(map);
+// /* Se agrega la leyenda */
+// var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
+// legends:[
+//     {
+//         label: "Áreas",
+//         type: "rectangle",
+//         color: "#0074f0",
+//         fillColor: "#009ff0",
+//         weight: 2,
+//         layers: areasJS,areas
+//     },
+//     {
+//         label: "Puntos de reciclaje",
+//         type: "point",
+//         color: "#0000ff",
+//         fillColor: "#0000ff",
+//         fillOpacity: 0.5,
+//         weight: 1,
+//         layers: reciclajeJS,reciclaje
+//     }
+// ]
+// }).addTo(map);
 
 /* Se agrega Control para desplegar datos al pasar el mouse */
 var info = L.control();
@@ -85,11 +83,15 @@ info.onAdd = function(map){
     return this._div;
 };
 
-/* Se actualiza el div con los datos */
+/* Se actualiza el div con los datos, si la capa no tiene nombre, no se muestra info */
 info.update = function(props){
-    this._div.innerHTML = '<h4>Información</h4>' +  (props ?
-        '<b>' + props.Nombre + '</b><br />'
-        : 'Prueba');
+    if (props && props.Nombre) {
+        this._div.innerHTML = '<h4>Nombre</h4>' + '<b>' + props.Nombre + '</b><br />';
+        this._div.style.display = 'block'; // Show the div
+    } else {
+        this._div.innerHTML = '';
+        this._div.style.display = 'none'; // Hide the div
+    }
 };
 
 info.addTo(map);
@@ -109,12 +111,13 @@ function highlightFeature(e) {
 
 }
 
-/* Se crean como variables las capas poligonales */
-var areasJS;
+
 
 /* Se agrega función para resetear el estilo */
 function resetHighlight(e) {
-    areasJS.resetStyle(e.target);
+    allData.forEach(function(item) {
+        window[item.name + 'JS'].resetStyle(e.target);
+    });
     info.update();
 }
 
@@ -137,13 +140,14 @@ function onEachFeature(feature, layer) {
 //L.geoJson(areas).addTo(map);
 //L.geoJson(reciclaje).addTo(map);
 /* En cada click, se hace lo descrito por la funcion onEachFeature */
-areasJS = L.geoJson(areas, {
-    onEachFeature: onEachFeature
-}).addTo(map);
-/* En cada click, se hace un popup */
-var reciclajeJS = L.geoJson(reciclaje, {
-    onEachFeature: onEachFeature
-}).addTo(map);
+/* Se crea una capa para cada conjunto de datos GeoJSON */
+allData.forEach(function(item) {
+    window[item.name + 'JS'] = L.geoJson(item.data, {
+        onEachFeature: onEachFeature
+    });
+});
+
+
 
 /* Se agrega una layer para controlar el basemap */
 var baseMaps = {
@@ -161,12 +165,12 @@ const volar = (coords) => {
 
 /* Se agrega función para llamar una alerta que muestre las coordenadas del lugar */
 
-const definirAlert = ([lat, lng]) => {
-    alert.classList.remove('hidden');
-    alert.innerText = `Coordenadas:
-    Latitud: ${lat},
-    Longitud: ${lng}`;
-}
+// const definirAlert = ([lat, lng]) => {
+//     alert.classList.remove('hidden');
+//     alert.innerText = `Coordenadas:
+//     Latitud: ${lat},
+//     Longitud: ${lng}`;
+// }
 
 
 /* Limpiar opciones de la barra lateral */
@@ -198,24 +202,23 @@ const crearLista = () => {
     return ul;
 }
 
-/* Crea lista de capas (areasJS y reciclajeJS), y permita controlar su visibilidad */
-const crearCapas = () => {
+/* Crea lista de capas y permite controlar su visibilidad */
+function crearCapas(capas) {
     const div = document.createElement('div');
-
-    // Define your layers
-    const capas = [
-        { name: 'Areas Verdes', layer: areasJS },
-        { name: 'Puntos de Reciclaje', layer: reciclajeJS }
-    ];
 
     // Create checkboxes for each layer
     capas.forEach(capa => {
         const label = document.createElement('label');
         label.innerText = capa.name;
+        label.style.position = 'relative';
+        label.style.paddingLeft = '35px';
+        label.style.cursor = 'pointer';
+        label.style.marginTop = '5px';
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.checked = map.hasLayer(capa.layer);
+        checkbox.checked = false; // The layer is not visible initially
+        checkbox.style.display = 'none';
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 map.addLayer(capa.layer);
@@ -224,11 +227,72 @@ const crearCapas = () => {
             }
         });
 
+        const customCheckbox = document.createElement('span');
+        customCheckbox.style.position = 'absolute';
+        customCheckbox.style.left = '0';
+        customCheckbox.style.top = '0';
+        customCheckbox.style.width = '20px';
+        customCheckbox.style.height = '20px';
+        customCheckbox.style.border = '2px solid #000';
+        customCheckbox.style.borderRadius = '50%';
+        
+
+        checkbox.addEventListener('change', () => {
+            if (checkbox.checked) {
+                customCheckbox.style.background = '#000';
+            } else {
+                customCheckbox.style.background = 'none';
+            }
+        });
+
         label.appendChild(checkbox);
+        label.appendChild(customCheckbox);
         div.appendChild(label);
+        // Add a break element
+        const br = document.createElement('br');
+        div.appendChild(br);
     });
 
     return div;
+}
+
+/* Crea un acordeón con el título y el contenido especificados */
+function crearAcordeon(titulo, contenido) {
+    // Crear el elemento del acordeón
+    const accordionItem = document.createElement('div');
+    accordionItem.classList.add('accordion-item');
+
+    // Crear el encabezado del acordeón
+    const accordionHeader = document.createElement('h2');
+    accordionHeader.classList.add('accordion-header');
+    accordionHeader.id = `${titulo}-header`;
+
+    // Crear el botón del acordeón
+    const button = document.createElement('button');
+    button.classList.add('accordion-button', 'collapsed');
+    button.type = 'button';
+    button.dataset.bsToggle = 'collapse';
+    button.dataset.bsTarget = `#${titulo}-collapse`;
+    button.textContent = titulo;
+
+    // Crear el contenido del acordeón
+    const accordionCollapse = document.createElement('div');
+    accordionCollapse.id = `${titulo}-collapse`;
+    accordionCollapse.classList.add('accordion-collapse', 'collapse');
+    accordionCollapse.setAttribute('aria-labelledby', `${titulo}-header`);
+    accordionCollapse.dataset.bsParent = '#accordionExample';
+
+    const accordionBody = document.createElement('div');
+    accordionBody.classList.add('accordion-body');
+    accordionBody.appendChild(contenido); // Agregar el contenido como un elemento del DOM
+
+    // Agregar los elementos al acordeón
+    accordionCollapse.appendChild(accordionBody);
+    accordionHeader.appendChild(button);
+    accordionItem.appendChild(accordionHeader);
+    accordionItem.appendChild(accordionCollapse);
+
+    return accordionItem;
 }
     
 
@@ -236,16 +300,37 @@ const crearCapas = () => {
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
 let currentOverlay = null; // Variable to keep track of the currently open overlay
 
-function crearListado(imagen, contenido) {
+function crearListado(imagen, titulo,color, contenido) {
     // Create a div for the overlay
     const divOverlay = document.createElement('div');
     divOverlay.id = 'overlay-' + imagen; // Unique ID for each overlay
     divOverlay.classList.add('col-2'); // Add Bootstrap column class
     divOverlay.style.height = '100%';
+    divOverlay.style.width = '250px';
     divOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     divOverlay.style.color = 'white';
     divOverlay.style.display = 'none'; // Hidden by default
     divOverlay.style.zIndex = '1000'; // To appear above the map
+    divOverlay.style.padding = '0';
+    if (window.innerWidth <= 400) { // If the screen width is 600px or less
+        divOverlay.style.width = '20%'; // Use 100% width
+    } else {
+        divOverlay.style.width = '250px'; // Use 250px width
+    }
+
+    // Create a title element
+    const titleElement = document.createElement('h2');
+    titleElement.textContent = titulo;
+    titleElement.style.color = 'black'; 
+    titleElement.style.backgroundColor = color
+    titleElement.style.boxSizing = 'border-box';
+    titleElement.style.width = '100%';
+    //justify the text
+    titleElement.style.textAlign = 'center';
+
+
+    // Append the title to the overlay
+    divOverlay.appendChild(titleElement);
 
     // Append the overlay to the row div
     const row = document.querySelector('.row');
@@ -255,9 +340,19 @@ function crearListado(imagen, contenido) {
     divOverlay.appendChild(contenido);
 
     const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'btn btn-secondary';
+    button.dataset.toggle = 'tooltip';
+    button.dataset.placement = 'right';
+    button.title = titulo;
+    button.style.borderRadius = '0';
     const img = document.createElement('img');
     img.src = imagen;
+    img.title = titulo;
     button.appendChild(img);
+    button.style.backgroundColor = color;
+    
+    
     button.addEventListener('click', () => {
         if (divOverlay.style.display === 'none') {
             // If another overlay is open, close it
@@ -280,14 +375,94 @@ function crearListado(imagen, contenido) {
         buttonContainer.id = 'button-container';
         buttonContainer.style.display = 'flex';
         buttonContainer.style.flexDirection = 'column';
+        buttonContainer.style.overflow = 'auto';
         const sidebar = document.getElementById('sidebar');
         sidebar.appendChild(buttonContainer);
     }
 
     // Append the button to the button container
     buttonContainer.appendChild(button);
+
 }
 
-crearListado("assets/interface/layers.png", crearCapas());
-crearListado("assets/interface/place.png", crearLista());
+$(function () {
+    $('[data-toggle="tooltip"]').tooltip()
+  })
 
+
+// Se definen las capas correspondientes a la categoria "Territorios"
+// // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
+const capasTerritorios = [
+    { name: 'Comuna Petorca', layer: comuna_petorcaJS },
+    { name: 'Comunas IV y V Región', layer: comunas_4_5_regionJS },
+    { name: 'Límites Unidades Vecinales', layer: limites_uni_vecinalesJS },
+    { name: 'Poblados', layer: pobladosJS }
+];
+
+const capasSustentabilidad = [
+    { name: 'Áreas verdes', layer: areasverdesJS },
+    { name: 'Clima Koppen en Petorca', layer: climakoppenJS },
+    { name: 'Estadísticas fluviométricas vigentes con datos', layer: fluviometricasJS },
+    { name: 'Estadísticas meteorologicas vigentes con datos', layer: meteorologicasJS },
+    { name: 'Humedales', layer: humedalesJS },
+    { name: 'Formaciones vegetacionales Gajardo', layer: vegetacionalesJS }
+];
+
+const capasHidrologia = [
+    { name: 'Sistemas de Servicio Sanitario Rural, SSR (ex APR)', layer: apr_ssrJS },
+    { name: 'CASUB: Comunidad de Aguas Subterráneas', layer: casub_plqJS },
+    { name: 'Cuenca completa río Petorca', layer: cuenca_rio_petorcaJS },
+    { name: 'DAA cuenca río Petorca 1956', layer: daa_cuenca_rio_petorca_1956JS },
+    { name: 'DAA cuenca río Petorca 1969', layer: daa_cuenca_rio_petorca_1969JS },
+    { name: 'DAA cuenca río Petorca 1984', layer: daa_cuenca_rio_petorca_1984JS },
+    { name: 'Estaciones calidad de agua', layer: estaciones_calidad_de_aguaJS },
+    { name: 'Obras subt registradas MEE comuna de Petorca', layer: obras_subt_reg_meeJS },
+    { name: 'Obras subt registradas MEE cuenca del río Petorca', layer: obras_subt_reg_mee_cuenca_rioJS },
+    { name: 'Plantas de tratamiento de aguas servidas ESVAL', layer: plantas_tratamiento_aguas_servidas_esvalJS }
+
+];
+
+const capasComunicacion = [
+    { name: 'Antenas de servicio en Petorca', layer: antenas_servicio_petorcaJS }
+];
+
+const capasEducacion = [
+    { name: 'Establecimientos de educación parvularia', layer: estab_educ_parvulariaJS },
+    { name: 'Establecimientos educacionales', layer: estab_educacionalesJS },
+    { name: 'Jardines infantiles JUNJI', layer: jardines_infantiles_junjiJS },
+    { name: 'Jardines INTEGRA', layer: jardines_integraJS },
+];
+
+const capasSalud = [
+    { name: 'Establecimientos de salud', layer: estab_saludJS }
+];
+
+const capasSeguridad = [
+    { name: 'Carabineros', layer: carabinerosJS },
+    { name: 'Compañías de bomberos', layer: compañias_bomberosJS },
+    { name: 'Grifos', layer: grifosJS },
+    { name: 'Municipalidad', layer: municipalidadJS }
+];
+
+/* Se crean los acordeones con las capas de las subcategorias de servicios esenciales */
+const acordeonComunicacion = crearAcordeon('Comunicación',crearCapas(capasComunicacion));
+const acordeonEducacion = crearAcordeon('Educación',crearCapas(capasEducacion));
+const acordeonSalud = crearAcordeon('Salud',crearCapas(capasSalud));
+const acordeonSeguridad = crearAcordeon('Seguridad',crearCapas(capasSeguridad));
+
+const contenedorServicios = document.createElement('div');
+contenedorServicios.appendChild(acordeonComunicacion);
+contenedorServicios.appendChild(acordeonEducacion);
+contenedorServicios.appendChild(acordeonSalud);
+contenedorServicios.appendChild(acordeonSeguridad);
+
+
+
+
+crearListado("assets/interface/place.png", 'Lugares', '#f39890', crearLista());
+crearListado("assets/interface/public-service.png", 'Servicios Esenciales','#f5b289', contenedorServicios);
+crearListado("assets/interface/territories.png", 'Territorios','#ffee93', crearCapas(capasTerritorios));
+crearListado("assets/interface/sustainable.png", 'Sustentabilidad','#b9e7aa', crearCapas(capasSustentabilidad));
+crearListado("assets/interface/save-water.png", 'Hidrología','#a0ced9', crearCapas(capasHidrologia));
+
+// naranjo: f5b289 celeste: a0ced9 paleta de https://coolors.co/b9e7aa

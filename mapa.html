@@ -16,10 +16,12 @@
     <!-- Vinculamos el archivo CSS de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
-    <!-- Titulo en la pestaña de la página-->
-    <title>Mapa de prueba</title>
-    <!-- Titulo arriba del mapa (cabecera)-->
-    <h1>Mapa de prueba</h1>
+
+    <style>
+        body {
+            background-color: #D2D2D2;
+        }
+    </style>
 
     <!-- Se crea una selección de lugares, con sus coordenadas como valores.
     <select name="select" id="select">
@@ -42,31 +44,69 @@
             </div>
 
             <!-- Se crea un div con id "map" donde se mostrará el mapa -->
-            <div id = "map" class="col"></div>
+            <div id = "map" class="col flex-grow-1"></div>
 
         </div>
 
     </div>
 
-    
+
     <!-- Se incluye el archivo Javascript de Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
-    <!-- Se incluye el archivo Javascript con la lista de Sitios (PRUEBA) -->
+    <!-- Se incluye el archivo Javascript con la lista de Sitios -->
     <script src = "./config/sites.js">  </script>
     <!-- Vinculamos el archivo Javascript del plugin Minimap -->
     <script src = "Leaflet-MiniMap-master/dist/Control.MiniMap.min.js"></script>
     <!-- Vinculamos el archivo Javascript del plugin Legend -->
     <script src = "Leaflet.Legend-master/src/leaflet.legend.js"></script>
     <!-- Vinculamos el archivo Javascript de Bootstrap -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-    <!-- Vinculamos el archivo Javascript de la capa de areas verdes -->
-    <script src="layers/areas.js"></script>
-    <!-- Vinculamos el archivo Javascript de la capa de zonas de reciclaje -->
-    <script src="layers/reciclaje.js"></script>
-    <!-- Vinculamos el archivo Javascript de la capa de provincias de la 4ta y 5ta región -->
-    <script src="layers/provincias.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <!-- Vinculamos el archivo Javascript de jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Vinculamos los archivos Javascript de la carpeta "layers/territorio" -->
+    <script src = "layers/territorio/comuna_petorca.js"></script>
+    <script src = "layers/territorio/comunas_4_5_region.js"></script>
+    <script src = "layers/territorio/limites_uni_vecinales.js"></script>
+    <script src = "layers/territorio/poblados.js"></script>
+    <!-- Vinculamos los archivos Javascript de la carpeta "layers/sustentabilidad" -->
+    <script src = "layers/sustentabilidad/areasverdes.js"></script>
+    <script src = "layers/sustentabilidad/climakoppen.js"></script>
+    <script src = "layers/sustentabilidad/fluviometricas.js"></script>
+    <script src = "layers/sustentabilidad/humedales.js"></script>
+    <script src = "layers/sustentabilidad/meteorologicas.js"></script>
+    <script src = "layers/sustentabilidad/pisos_vegetacionales_pliscoff.js"></script>
+    <script src = "layers/sustentabilidad/vegetacionales.js"></script>
+    <!-- Vinculamos los archivos Javascript de la carpeta "layers/hidrologia" -->
+    <script src = "layers/hidrologia/apr_ssr.js"></script>
+    <script src = "layers/hidrologia/casub_plq.js"></script>
+    <script src = "layers/hidrologia/cuenca_rio_petorca.js"></script>
+    <script src = "layers/hidrologia/daa_cuenca_rio_petorca_1956.js"></script>
+    <script src = "layers/hidrologia/daa_cuenca_rio_petorca_1969.js"></script>
+    <script src = "layers/hidrologia/daa_cuenca_rio_petorca_1984.js"></script>
+    <script src = "layers/hidrologia/estaciones_calidad_de_agua.js"></script>
+    <script src = "layers/hidrologia/obras_subt_reg_mee.js"></script>
+    <script src = "layers/hidrologia/obras_subt_reg_mee_cuenca_rio.js"></script>
+    <script src = "layers/hidrologia/plantas_tratamiento_aguas_servidas_esval.js"></script>
+    <!-- Vinculamos los archivos Javascript de la carpeta "layers/servicios_esenciales/comunicaciones" -->
+    <script src = "layers/servicios_esenciales/comunicaciones/antenas_servicio_pet.js"></script>
+    <script src = "layers/servicios_esenciales/comunicaciones/antenas_servicio_petorca.js"></script>
+    <!-- Vinculamos los archivos Javascript de la carpeta "layers/servicios_esenciales/educacion" -->
+    <script src = "layers/servicios_esenciales/educacion/estab_educ_parvularia.js"></script>
+    <script src = "layers/servicios_esenciales/educacion/estab_educacionales.js"></script>
+    <script src = "layers/servicios_esenciales/educacion/jardines_infantiles_junji.js"></script>
+    <script src = "layers/servicios_esenciales/educacion/jardines_integra.js"></script>
+    <!-- Vinculamos los archivos Javascript de la carpeta "layers/servicios_esenciales/salud" -->
+    <script src = "layers/servicios_esenciales/salud/estab_salud.js"></script>
+    <!-- Vinculamos los archivos Javascript de la carpeta "layers/servicios_esenciales/seguridad" -->
+    <script src = "layers/servicios_esenciales/seguridad/carabineros.js"></script>
+    <script src = "layers/servicios_esenciales/seguridad/compañias_bomberos.js"></script>
+    <script src = "layers/servicios_esenciales/seguridad/grifos.js"></script>
+    <script src = "layers/servicios_esenciales/seguridad/municipalidad.js"></script>
+
+    <!-- Se incluye el archivo Javascript con la lista de Capas -->
+    <script src = "layers/listLayers.js">  </script>
     <!-- Vinculamos el archivo Javascript "mapa.js" creado por nosotros -->
     <script src="mapa.js"></script>
     

@@ -1,5 +1,5 @@
 #map {
-    height: 90vh;
+    height: 100vh;
     width: 100hw;
 }
 
@@ -36,9 +36,10 @@ Select{
 }
 
 /* Agrega funcionalidad de cursor sobre el Sidebar. */
-#sidebar li:hover{
+#sidebar li {
     cursor: pointer;
     font-weight: bold;
+    overflow: auto; /* Asegura que el contenido no se desborde */
 }
 
 .hidden {
@@ -54,4 +55,19 @@ Select{
 .leaflet-retina .leaflet-control-layers-toggle {
     background-image: url(assets/interface/worldwide.png);
     background-size: 26px 26px;
+}
+
+#sidebar {
+    width: 128px; /* Establece el ancho de la barra lateral */
+    overflow: auto; /* Asegura que el contenido no se desborde */
+    border-radius: 15px;
+    padding: 0;
+    margin: 0;
+}
+
+#button-container {
+    margin: 5px 0px 0px; 
+    width: 100%; /* Asegura que el contenedor de botones no sea más ancho que la barra lateral */
+    overflow: auto; /* Asegura que los botones no se desborden */
+    border-radius: 0;
 }
