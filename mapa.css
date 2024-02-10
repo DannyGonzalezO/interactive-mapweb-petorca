@@ -69,5 +69,18 @@ Select{
     margin: 5px 0px 0px; 
     width: 100%; /* Asegura que el contenedor de botones no sea más ancho que la barra lateral */
     overflow: auto; /* Asegura que los botones no se desborden */
-    border-radius: 0;
+}
+
+.accordion-button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+}
+
+.accordion-button-icon::before {
+    content: '▲'; /* Icon for when the accordion is open */
+}
+
+.accordion-button.collapsed .accordion-button-icon::before {
+    content: '▼'; /* Icon for when the accordion is closed */
 }

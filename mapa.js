@@ -189,6 +189,11 @@ const crearLista = () => {
         const li = document.createElement('li');
         li.innerText = lugar.nombre;
         li.classList.add('list-group-item');
+        li.style.color = 'white';
+
+        // Agregar estilo CSS para cambiar el color del botón
+        li.style.backgroundColor = 'rgba(0, 0, 0,0.5)';
+
         ul.append(li);
 
         li.addEventListener('click', () => {
@@ -268,6 +273,10 @@ function crearAcordeon(titulo, contenido) {
     const accordionHeader = document.createElement('h2');
     accordionHeader.classList.add('accordion-header');
     accordionHeader.id = `${titulo}-header`;
+    accordionHeader.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+    accordionHeader.style.textAlign = 'center';
+    accordionHeader.style.fontWeight = 'bold';
+    
 
     // Crear el botón del acordeón
     const button = document.createElement('button');
@@ -276,6 +285,13 @@ function crearAcordeon(titulo, contenido) {
     button.dataset.bsToggle = 'collapse';
     button.dataset.bsTarget = `#${titulo}-collapse`;
     button.textContent = titulo;
+    button.style.fontWeight = 'bold';
+    button.style.textAlign = 'center';
+
+    // Add the arrow icon
+    const arrowIcon = document.createElement('span');
+    arrowIcon.classList.add('accordion-button-icon');
+    button.appendChild(arrowIcon);
 
     // Crear el contenido del acordeón
     const accordionCollapse = document.createElement('div');
