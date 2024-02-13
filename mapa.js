@@ -237,11 +237,12 @@ function crearCapas(capas,color) {
         customCheckbox.style.position = 'absolute';
         customCheckbox.style.left = '0';
         customCheckbox.style.top = '0';
-        customCheckbox.style.width = '20px';
-        customCheckbox.style.height = '20px';
+        customCheckbox.style.width = '15px';
+        customCheckbox.style.height = '15px';
         customCheckbox.style.border = '2px solid #000';
         customCheckbox.style.borderRadius = '50%';
         customCheckbox.style.marginTop = '5px';
+        customCheckbox.style.marginLeft = '5px';
         
 
         checkbox.addEventListener('change', () => {
@@ -275,7 +276,6 @@ function crearAcordeon(titulo, contenido) {
     accordionHeader.id = `${titulo}-header`;
     accordionHeader.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
     accordionHeader.style.textAlign = 'center';
-    accordionHeader.style.fontWeight = 'bold';
     
 
     // Crear el botón del acordeón
@@ -285,7 +285,6 @@ function crearAcordeon(titulo, contenido) {
     button.dataset.bsToggle = 'collapse';
     button.dataset.bsTarget = `#${titulo}-collapse`;
     button.textContent = titulo;
-    button.style.fontWeight = 'bold';
     button.style.textAlign = 'center';
 
     // Add the arrow icon
@@ -325,8 +324,9 @@ function crearListado(imagen, titulo,color, contenido) {
     divOverlay.classList.add('col-2'); // Add Bootstrap column class
     divOverlay.style.height = '100%';
     divOverlay.style.width = '250px';
-    divOverlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-    divOverlay.style.color = 'white';
+    divOverlay.style.backgroundColor = 'white';
+    divOverlay.style.color = 'black';
+    divOverlay.style.fontFamily = 'Arial, sans-serif';
     divOverlay.style.display = 'none'; // Hidden by default
     divOverlay.style.zIndex = '1000'; // To appear above the map
     divOverlay.style.padding = '0';
@@ -396,6 +396,7 @@ function crearListado(imagen, titulo,color, contenido) {
         buttonContainer.style.overflow = 'auto';
         const sidebar = document.getElementById('sidebar');
         sidebar.appendChild(buttonContainer);
+        
     }
 
     // Append the button to the button container
@@ -461,6 +462,16 @@ const capasSeguridad = [
     { name: 'Grifos', layer: grifosJS },
     { name: 'Municipalidad', layer: municipalidadJS }
 ];
+
+const todasLasCapas = [
+    ...capasTerritorios,
+    ...capasSustentabilidad,
+    ...capasHidrologia,
+    ...capasComunicacion,
+    ...capasEducacion,
+    ...capasSalud,
+    ...capasSeguridad
+];
 var searchLayer = L.layerGroup();
 
 
@@ -468,7 +479,7 @@ var searchLayer = L.layerGroup();
 var markerToLayer = new Map();
 
 
-capasSeguridad.forEach(capa => {
+todasLasCapas.forEach(capa => {
     capa.layer.eachLayer(marker => {
         marker.feature.properties.title = capa.name;
         // Agrega el marcador y la capa al mapeo
@@ -497,7 +508,7 @@ controlSearch.on('search:locationfound', function(e) {
 });
 
 map.addControl(controlSearch);
-capasSeguridad.forEach(capa => {
+todasLasCapas.forEach(capa => {
     map.removeLayer(capa.layer);
 });
 
@@ -532,4 +543,4 @@ crearListado("assets/interface/territories.png", 'Territorios',colorTerritorios,
 crearListado("assets/interface/sustainable.png", 'Sustentabilidad',colorSustentabilidad, crearCapas(capasSustentabilidad,colorSustentabilidad));
 crearListado("assets/interface/save-water.png", 'Hidrología',colorHidrologia, crearCapas(capasHidrologia,colorHidrologia));
 
-// naranjo: f5b289 celeste: a0ced9 paleta de https://coolors.co/b9e7aa
+//paleta de colores https://coolors.co/b9e7aa
