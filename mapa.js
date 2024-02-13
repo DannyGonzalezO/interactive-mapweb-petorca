@@ -461,6 +461,45 @@ const capasSeguridad = [
     { name: 'Grifos', layer: grifosJS },
     { name: 'Municipalidad', layer: municipalidadJS }
 ];
+var searchLayer = L.layerGroup();
+
+
+// Mapeo de marcadores a capas
+var markerToLayer = new Map();
+
+
+capasSeguridad.forEach(capa => {
+    capa.layer.eachLayer(marker => {
+        marker.feature.properties.title = capa.name;
+        // Agrega el marcador y la capa al mapeo
+        markerToLayer.set(marker, capa.layer);
+    });
+    searchLayer.addLayer(capa.layer);
+    map.removeLayer(capa.layer); // Oculta la capa
+});
+
+var controlSearch = new L.Control.Search({
+    layer: searchLayer,
+    initial: false,
+    hideMarkerOnCollapse: true,
+    propertyName: 'title', // Campo que se utilizará para la búsqueda
+    marker:false
+});
+
+controlSearch.on('search:locationfound', function(e) {
+    // e.layer es el marcador que se encontró con la búsqueda
+    // Busca la capa que contiene el marcador
+    var layer = markerToLayer.get(e.layer);
+    // Agrega la capa al mapa
+    if (layer) {
+        map.addLayer(layer);
+    }
+});
+
+map.addControl(controlSearch);
+capasSeguridad.forEach(capa => {
+    map.removeLayer(capa.layer);
+});
 
 /* Se crean los colores para la sidebar */
 const colorLugares = '#f39890';
