@@ -177,7 +177,8 @@ const volar = (coords) => {
 const limpiarItems = () => {
     const listadoLi = document.querySelectorAll('li');
     listadoLi.forEach(li => {
-        li.classList.remove('active');})
+        li.classList.remove('active');
+        li.style.border = '2px solid black';});
 }
 
 /* Crear lista de lugares y volar a la coordenada del lugar seleccionado */
@@ -189,16 +190,18 @@ const crearLista = () => {
         const li = document.createElement('li');
         li.innerText = lugar.nombre;
         li.classList.add('list-group-item');
-        li.style.color = 'white';
+        li.style.color = 'black';
+        li.style.border = '2px solid black';
 
         // Agregar estilo CSS para cambiar el color del botón
-        li.style.backgroundColor = 'rgba(0, 0, 0,0.5)';
+        li.style.backgroundColor = 'rgba(0, 0, 0,0.1)';
 
         ul.append(li);
 
         li.addEventListener('click', () => {
             limpiarItems();
             li.classList.add('active');
+            li.style.border = '2px solid blue';
             volar(lugar.coordenadas);
             //definirAlert(lugar.coordenadas);
         })
@@ -218,7 +221,9 @@ function crearCapas(capas,color) {
         label.style.position = 'relative';
         label.style.paddingLeft = '35px';
         label.style.cursor = 'pointer';
-        label.style.marginTop = '5px';
+        label.style.borderBottom = '2px solid gray';
+        
+        label.style.display = 'block';
     
 
         const checkbox = document.createElement('input');
@@ -252,13 +257,19 @@ function crearCapas(capas,color) {
                 customCheckbox.style.background = 'none';
             }
         });
+        // Create a break element
+        const spacer = document.createElement('div');
+        spacer.style.height = '10px'; // Cambia esto al alto que necesites
+        div.appendChild(spacer);
 
         label.appendChild(checkbox);
         label.appendChild(customCheckbox);
         div.appendChild(label);
-        // Add a break element
-        const br = document.createElement('br');
-        div.appendChild(br);
+
+        spacer.style.height = '10px'; // Cambia esto al alto que necesites
+        div.appendChild(spacer);
+
+
     });
 
     return div;
@@ -274,8 +285,11 @@ function crearAcordeon(titulo, contenido) {
     const accordionHeader = document.createElement('h2');
     accordionHeader.classList.add('accordion-header');
     accordionHeader.id = `${titulo}-header`;
-    accordionHeader.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+    accordionHeader.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
     accordionHeader.style.textAlign = 'center';
+    accordionHeader.style.padding = '10px';
+    accordionHeader.style.margin = '10px';
+    accordionHeader.style.border = '2px solid black';
     
 
     // Crear el botón del acordeón
@@ -343,6 +357,7 @@ function crearListado(imagen, titulo,color, contenido) {
     titleElement.style.backgroundColor = color
     titleElement.style.boxSizing = 'border-box';
     titleElement.style.width = '100%';
+    titleElement.style.borderBottom = '2px solid black';
     //justify the text
     titleElement.style.textAlign = 'center';
 
