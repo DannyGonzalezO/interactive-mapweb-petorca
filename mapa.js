@@ -211,8 +211,18 @@ const crearLista = () => {
 }
 
 /* Crea lista de capas y permite controlar su visibilidad */
-function crearCapas(capas,color) {
+function crearCapas(capas, color) {
     const div = document.createElement('div');
+
+    // Función para generar un color aleatorio
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        let randomColor = '#';
+        for (let i = 0; i < 6; i++) {
+            randomColor += letters[Math.floor(Math.random() * 16)];
+        }
+        return randomColor;
+    }
 
     // Create checkboxes for each layer
     capas.forEach(capa => {
@@ -222,17 +232,35 @@ function crearCapas(capas,color) {
         label.style.paddingLeft = '35px';
         label.style.cursor = 'pointer';
         label.style.borderBottom = '2px solid gray';
-        
         label.style.display = 'block';
-    
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.checked = false; // The layer is not visible initially
         checkbox.style.display = 'none';
+
+        // Genera un color aleatorio para la capa
+        const layerColor = getRandomColor();
+
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
                 map.addLayer(capa.layer);
+                // Aplica el color a la capa
+                capa.layer.eachLayer((layer) => {
+                    switch (layer.feature.geometry.type) {
+                        case 'Point':
+                            console.log('La capa es un marcador');
+                            layer.setIcon(L.icon({ iconUrl: 'marker-icon.png', iconColor: layerColor }));
+                            break;
+                        case 'MultiPolygon':
+                            console.log('La capa es un polígono');
+                            layer.setStyle({ color: layerColor });
+                            break;
+                        default:
+                            console.log('La capa es de un tipo desconocido:', layer.feature.geometry.type);
+                            break;
+                    }
+                });
             } else {
                 map.removeLayer(capa.layer);
             }
@@ -248,7 +276,6 @@ function crearCapas(capas,color) {
         customCheckbox.style.borderRadius = '50%';
         customCheckbox.style.marginTop = '5px';
         customCheckbox.style.marginLeft = '5px';
-        
 
         checkbox.addEventListener('change', () => {
             if (checkbox.checked) {
@@ -257,6 +284,7 @@ function crearCapas(capas,color) {
                 customCheckbox.style.background = 'none';
             }
         });
+
         // Create a break element
         const spacer = document.createElement('div');
         spacer.style.height = '10px'; // Cambia esto al alto que necesites
@@ -268,8 +296,6 @@ function crearCapas(capas,color) {
 
         spacer.style.height = '10px'; // Cambia esto al alto que necesites
         div.appendChild(spacer);
-
-
     });
 
     return div;
@@ -325,7 +351,6 @@ function crearAcordeon(titulo, contenido) {
 
     return accordionItem;
 }
-    
 
 
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
