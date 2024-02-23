@@ -31,7 +31,7 @@ var grifosJS;
 var municipalidadJS;
 
 
-/* Se crea un arreglo con todos los datos GeoJSON */
+/* Se crea un arreglo con todos los datos de capas */
 const allData = [
     { name: 'comuna_petorca', data: comuna_petorca },
     { name: 'comunas_4_5_region', data: comunas_4_5_region },
@@ -64,5 +64,3 @@ const allData = [
     { name: 'grifos', data: grifos },
     { name: 'municipalidad', data: municipalidad }
 ];
-
-

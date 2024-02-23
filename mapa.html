@@ -15,6 +15,10 @@
     <link rel = "stylesheet" type = "text/css" href = "Leaflet.Legend-master/src/leaflet.legend.css">
     <!-- Vinculamos el archivo CSS del plugin Search -->
     <link rel = "stylesheet" type = "text/css" href = "leaflet-search-master/src/leaflet-search.css">
+    <!-- Vinculamos el archivo CSS del plugin AwesomeMarkers-->
+    <link rel = "stylesheet" type = "text/css" href = "Leaflet.awesome-markers-2.0-develop/dist/leaflet.awesome-markers.css">
+    <!-- Vinculamos el archivo CSS de Ionicons -->
+    <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/1.5.2/css/ionicons.min.css">
     <!-- Vinculamos el archivo CSS de Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
@@ -49,7 +53,6 @@
 
             <!-- Se crea un div con id "map" donde se mostrará el mapa -->
             <div id = "map" class="col flex-grow-1"></div>
-
         </div>
 
     </div>
@@ -66,12 +69,14 @@
     <script src = "Leaflet.Legend-master/src/leaflet.legend.js"></script>
     <!-- Vinculamos el archivo Javascript del plugin Search -->
     <script src = "leaflet-search-master/src/leaflet-search.js"></script>
+    <!-- Vinculamos el archivo Javascript del plugin AwesomeMarkers-->
+    <script src = "Leaflet.awesome-markers-2.0-develop/dist/leaflet.awesome-markers.js"></script>
     <!-- Vinculamos el archivo Javascript de Bootstrap -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
     <!-- Vinculamos el archivo Javascript de jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Vinculamos los archivos Javascript de la carpeta "layers/territorio" -->
-    <script src = "layers/territorio/comuna_petorca.js"></script>
+    <script charset="UTF-8" src = "layers/territorio/comuna_petorca.js"></script>
     <script src = "layers/territorio/comunas_4_5_region.js"></script>
     <script src = "layers/territorio/limites_uni_vecinales.js"></script>
     <script src = "layers/territorio/poblados.js"></script>
@@ -80,7 +85,7 @@
     <script src = "layers/sustentabilidad/climakoppen.js"></script>
     <script src = "layers/sustentabilidad/fluviometricas.js"></script>
     <script src = "layers/sustentabilidad/humedales.js"></script>
-    <script src = "layers/sustentabilidad/meteorologicas.js"></script>
+    <script charset = "UTF-8" src = "layers/sustentabilidad/meteorologicas.js"></script>
     <script src = "layers/sustentabilidad/pisos_vegetacionales_pliscoff.js"></script>
     <script src = "layers/sustentabilidad/vegetacionales.js"></script>
     <!-- Vinculamos los archivos Javascript de la carpeta "layers/hidrologia" -->

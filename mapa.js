@@ -50,6 +50,48 @@ function popup(feature, layer) {
     }
 }
 
+// Define your custom control
+var VisibleLayersControl = L.Control.extend({
+    options: {
+        position: 'topleft' // Position of the control
+    },
+
+    onAdd: function (map) {
+        // Create the control button
+        var button = L.DomUtil.create('button');
+        button.style.backgroundColor = 'white';
+        button.style.backgroundImage = 'url(/assets/interface/layers.png)';
+        button.style.width = '32px';
+        button.style.height = '32px';
+        button.style.backgroundSize = '32 px 32px';
+        button.style.border = 'solid 1px #999';
+        button.style.borderRadius = '3px';
+        button.style.padding = '10px';
+
+        // Create the container for the visible layers
+        var container = L.DomUtil.create('div');
+        container.id = 'visible-layers';
+        container.style.display = 'none';
+
+        // Add event listener to the button
+        L.DomEvent.addListener(button, 'click', function () {
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        });
+
+        // Add the container to the button
+        button.appendChild(container);
+
+        return button;
+    }
+});
+
+// Add your custom control to the map
+map.addControl(new VisibleLayersControl());
+
 // /* Se agrega la leyenda */
 // var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
 // legends:[
@@ -96,15 +138,46 @@ info.update = function(props){
 
 info.addTo(map);
 
+
+function modificarColor(color, amount) {
+    // Remueve el # al inicio del color hexadecimal
+    color = color.substring(1);
+
+    // Convierte el color a RGB
+    var rgb = parseInt(color, 16);
+
+    // Calcula los componentes rojo, verde y azul
+    var r = (rgb >> 16) & 0xff;
+    var g = (rgb >> 8) & 0xff;
+    var b = rgb & 0xff;
+
+    // Modifica los componentes rojo, verde y azul
+    r = Math.min(255, Math.max(0, r + amount));
+    g = Math.min(255, Math.max(0, g + amount));
+    b = Math.min(255, Math.max(0, b + amount));
+
+    // Convierte los componentes modificados a hexadecimal
+    var modificado = ((r << 16) | (g << 8) | b).toString(16);
+
+    // Asegura que el color modificado tenga 6 dígitos
+    while (modificado.length < 6) {
+        modificado = '0' + modificado;
+    }
+
+    // Devuelve el color modificado con un # al inicio
+    return '#' + modificado;
+}
 /* Se agrega la interacción con el puntero */
 function highlightFeature(e) {
     var layer = e.target;
+    var currentColor = layer.options.color;  // Obtén el color actual de la capa
+    var darkerColor = modificarColor(currentColor, -40);  // Oscurece el color actual
 
     layer.setStyle({
         weight: 5,
-        color: '#666',
+        color: darkerColor,
         dashArray: '',
-        fillOpacity: 0.7
+        fillOpacity: 0.5
     });
 
     info.update(layer.feature.properties);
@@ -115,10 +188,19 @@ function highlightFeature(e) {
 
 /* Se agrega función para resetear el estilo */
 function resetHighlight(e) {
-    allData.forEach(function(item) {
-        window[item.name + 'JS'].resetStyle(e.target);
+    var layer = e.target;
+    var currentColor = layer.options.color;  // Obtén el color actual de la capa
+    var lighterColor = modificarColor(currentColor, 40);  // Oscurece el color actual
+
+    layer.setStyle({
+        weight: 3,
+        color: lighterColor,
+        dashArray: '',
+        fillOpacity: 0.2
     });
-    info.update();
+
+    info.update(layer.feature.properties);
+
 }
 
 /* Se agrega función para hacer zoom al hacer click */
@@ -210,6 +292,50 @@ const crearLista = () => {
     return ul;
 }
 
+// Control para ver las capas visibles
+var VisibleLayersControl = L.Control.extend({
+    options: {
+        position: 'topleft' // Position of the control
+    },
+
+    onAdd: function (map) {
+        // Create the control container
+        var controlContainer = L.DomUtil.create('div');
+        controlContainer.style.display = 'flex';
+
+        // Create the control button
+        var button = L.DomUtil.create('button', '', controlContainer);
+        button.style.backgroundColor = 'white';
+        button.style.backgroundImage = 'url(/assets/interface/layers.png)';
+        button.style.width = '32px';
+        button.style.height = '32px';
+        button.style.backgroundSize = 'cover';
+        button.style.border = 'solid 1px #999';
+        button.style.borderRadius = '3px';
+        button.style.padding = '10px';
+
+        // Create the container for the visible layers
+        var container = L.DomUtil.create('div', '', controlContainer);
+        container.id = 'visible-layers';
+        container.style.display = 'none';
+        container.style.backgroundColor = 'white'; // Set the background color to white
+        container.style.marginLeft = '10px'; // Add some space between the button and the container
+
+        // Add event listener to the button
+        L.DomEvent.addListener(button, 'click', function () {
+            if (container.style.display === 'none') {
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        });
+
+        return controlContainer;
+    }
+});
+
+/* Lista de colores para los marcadores */
+const colores = [ 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpurple', 'cadetblue'];
 /* Crea lista de capas y permite controlar su visibilidad */
 function crearCapas(capas, color) {
     const div = document.createElement('div');
@@ -223,7 +349,6 @@ function crearCapas(capas, color) {
         }
         return randomColor;
     }
-
     // Create checkboxes for each layer
     capas.forEach(capa => {
         const label = document.createElement('label');
@@ -241,28 +366,58 @@ function crearCapas(capas, color) {
 
         // Genera un color aleatorio para la capa
         const layerColor = getRandomColor();
-
+        const markerColor = colores[Math.floor(Math.random() * colores.length)];
         checkbox.addEventListener('change', () => {
+            var container = document.getElementById('visible-layers');
             if (checkbox.checked) {
                 map.addLayer(capa.layer);
+                var color;
                 // Aplica el color a la capa
                 capa.layer.eachLayer((layer) => {
                     switch (layer.feature.geometry.type) {
                         case 'Point':
-                            console.log('La capa es un marcador');
-                            layer.setIcon(L.icon({ iconUrl: 'marker-icon.png', iconColor: layerColor }));
+                            var icon = L.AwesomeMarkers.icon({
+                                markerColor: markerColor,
+                            });
+                            layer.setIcon(icon);
+                            color = markerColor;
                             break;
                         case 'MultiPolygon':
-                            console.log('La capa es un polígono');
                             layer.setStyle({ color: layerColor });
+                            color = layerColor;
+                            break;
+                        case 'LineString':
+                            layer.setStyle({ color: layerColor });
+                            color = layerColor;
                             break;
                         default:
-                            console.log('La capa es de un tipo desconocido:', layer.feature.geometry.type);
                             break;
                     }
                 });
+        
+                // Add the title and color of the layer to the container
+                var layerInfo = document.createElement('div');
+                layerInfo.textContent = capa.name;
+        
+                var colorSquare = document.createElement('div');
+                colorSquare.style.width = '20px';
+                colorSquare.style.height = '20px';
+                colorSquare.style.backgroundColor = color;
+                colorSquare.style.display = 'inline-block';
+                colorSquare.style.marginRight = '5px';
+        
+                layerInfo.prepend(colorSquare);
+                container.appendChild(layerInfo);
             } else {
                 map.removeLayer(capa.layer);
+        
+                // Remove the title and color of the layer from the container
+                for (var i = 0; i < container.childNodes.length; i++) {
+                    if (container.childNodes[i].textContent === capa.name) {
+                        container.removeChild(container.childNodes[i]);
+                        break;
+                    }
+                }
             }
         });
 
@@ -315,7 +470,8 @@ function crearAcordeon(titulo, contenido) {
     accordionHeader.style.textAlign = 'center';
     accordionHeader.style.padding = '10px';
     accordionHeader.style.margin = '10px';
-    accordionHeader.style.border = '2px solid black';
+    accordionHeader.style.borderBottom = '2px solid black';
+    accordionHeader.style.display = 'block';
     
 
     // Crear el botón del acordeón
@@ -369,6 +525,7 @@ function crearListado(imagen, titulo,color, contenido) {
     divOverlay.style.display = 'none'; // Hidden by default
     divOverlay.style.zIndex = '1000'; // To appear above the map
     divOverlay.style.padding = '0';
+    divOverlay.style.borderRight = '2px solid black';
     if (window.innerWidth <= 400) { // If the screen width is 600px or less
         divOverlay.style.width = '20%'; // Use 100% width
     } else {
@@ -551,6 +708,9 @@ map.addControl(controlSearch);
 todasLasCapas.forEach(capa => {
     map.removeLayer(capa.layer);
 });
+
+
+
 
 /* Se crean los colores para la sidebar */
 const colorLugares = '#f39890';
