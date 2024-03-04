@@ -50,47 +50,8 @@ function popup(feature, layer) {
     }
 }
 
-// Define your custom control
-var VisibleLayersControl = L.Control.extend({
-    options: {
-        position: 'topleft' // Position of the control
-    },
 
-    onAdd: function (map) {
-        // Create the control button
-        var button = L.DomUtil.create('button');
-        button.style.backgroundColor = 'white';
-        button.style.backgroundImage = 'url(/assets/interface/layers.png)';
-        button.style.width = '32px';
-        button.style.height = '32px';
-        button.style.backgroundSize = '32 px 32px';
-        button.style.border = 'solid 1px #999';
-        button.style.borderRadius = '3px';
-        button.style.padding = '10px';
 
-        // Create the container for the visible layers
-        var container = L.DomUtil.create('div');
-        container.id = 'visible-layers';
-        container.style.display = 'none';
-
-        // Add event listener to the button
-        L.DomEvent.addListener(button, 'click', function () {
-            if (container.style.display === 'none') {
-                container.style.display = 'block';
-            } else {
-                container.style.display = 'none';
-            }
-        });
-
-        // Add the container to the button
-        button.appendChild(container);
-
-        return button;
-    }
-});
-
-// Add your custom control to the map
-map.addControl(new VisibleLayersControl());
 
 // /* Se agrega la leyenda */
 // var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
@@ -210,11 +171,16 @@ function zoomToFeature(e) {
 
 /* Se agrega función para agregar interacción al puntero */
 function onEachFeature(feature, layer) {
-    layer.on({
-    mouseover: highlightFeature,
-    mouseout: resetHighlight,
-    click: popup(feature, layer)
-    });
+    if(layer){ 
+        layer.on({
+            mouseover: highlightFeature,
+            mouseout: resetHighlight,
+            click: popup(feature, layer)
+            })
+    }
+    else{
+        console.log('No se encontró la capa');
+    };
 }
 
 
@@ -319,7 +285,9 @@ var VisibleLayersControl = L.Control.extend({
         container.id = 'visible-layers';
         container.style.display = 'none';
         container.style.backgroundColor = 'white'; // Set the background color to white
-        container.style.marginLeft = '10px'; // Add some space between the button and the container
+        container.style.margin = '10px'; // Add some space between the button and the container
+        container.style.padding = '10px'; // Add some space around the content
+        container.style.border = 'solid 1px #999'; // Add a border around the container
 
         // Add event listener to the button
         L.DomEvent.addListener(button, 'click', function () {
@@ -333,9 +301,11 @@ var VisibleLayersControl = L.Control.extend({
         return controlContainer;
     }
 });
+// Add your custom control to the map
+map.addControl(new VisibleLayersControl());
 
 /* Lista de colores para los marcadores */
-const colores = [ 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'darkpurple', 'cadetblue'];
+const colores = [ 'red', 'darkred', 'orange', 'green', 'darkgreen', 'blue', 'purple', 'cadetblue'];
 /* Crea lista de capas y permite controlar su visibilidad */
 function crearCapas(capas, color) {
     const div = document.createElement('div');
@@ -718,6 +688,7 @@ const colorServicios = '#f5b289';
 const colorTerritorios = '#ffee93';
 const colorSustentabilidad = '#b9e7aa'; 
 const colorHidrologia = '#a0ced9';
+const colorInformación = 'white';
 
 
 /* Se crean los acordeones con las capas de las subcategorias de servicios esenciales */
@@ -733,6 +704,58 @@ contenedorServicios.appendChild(acordeonEducacion);
 contenedorServicios.appendChild(acordeonSalud);
 contenedorServicios.appendChild(acordeonSeguridad);
 
+/* Se crea la información sobre la página */
+function crearInformacion() {
+    var div = document.createElement('div');
+    div.style.padding = '10px';
+    var text = document.createElement('p');
+    var infoText1 = 'Este es el Visor interactivo de la Municipalidad de Petorca.<br><br> Puede presionar uno de los iconos de la barra lateral para agregar las capas al mapa.<br><br> Presionando el botón ';
+    var imgLayers = '/assets/interface/layers.png';
+    var infoText2 = ' podrás ver las capas activas y sus colores.<br><br> Presionando el botón ';
+    var imgSearch = '/assets/interface/search.png';
+    var infoText3 = ' podrás buscar las capas por su nombre y activarlas ahí.<br><br> Presionando el botón ';
+    var imgWorld = '/assets/interface/worldwide.png';
+    var infoText4 = ' podrás cambiar la imágen del mapa de fondo.';
+    
+    text.innerHTML = infoText1 + '<img src="' + imgLayers + '" alt="Icono de capas" style="width: 20px; height: 20px;">' + infoText2 + '<img src="' + imgSearch + '" alt="Icono de búsqueda" style="width: 20px; height: 20px;">' + infoText3 + '<img src="' + imgWorld + '" alt="Icono de mundo" style="width: 20px; height: 20px;">' + infoText4;
+    div.appendChild(text);
+
+    var button = document.createElement('button');
+    button.textContent = 'Referencias';
+    div.appendChild(button);
+
+    var references = document.createElement('div');
+    references.style.display = 'none';
+    references.style.padding = '10px';
+    references.style.overflow = 'auto';
+    references.style.maxHeight = '200px';
+    references.innerHTML = `
+        Logo Basemaps: <a href="https://www.flaticon.com/free-icons/world" title="world icons">World icons created by turkkub - Flaticon</a><br>
+        Icon Layers: <a href="https://www.flaticon.com/free-icons/layers" title="layers icons">Layers icons created by Those Icons - Flaticon</a><br>
+        Icon Places: <a href="https://www.flaticon.com/free-icons/place" title="place icons">Place icons created by Freepik - Flaticon</a><br>
+        Icon Sustainability <a href="https://www.flaticon.com/free-icons/sustainable" title="sustainable icons">Sustainable icons created by Eucalyp - Flaticon</a><br>
+        Icon Public Service <a href="https://www.flaticon.com/free-icons/customer-service" title="customer service icons">Customer service icons created by Awicon - Flaticon</a><br>
+        Icon Water <a href="https://www.flaticon.com/free-icons/water" title="water icons">Water icons created by Freepik - Flaticon</a><br>
+        Icon Info <a href="https://www.flaticon.com/free-icons/info" title="info icons">Info icons created by Freepik - Flaticon</a><br>
+        Icon Territory <a href="https://www.flaticon.com/free-icons/territory" title="territory icons">Territory icons created by HAJICON - Flaticon</a><br>
+        Icon Search <a href="https://www.flaticon.com/free-icons/search" title="search icons">Search icons created by Freepik - Flaticon</a><br>
+        Marker <a href="https://www.flaticon.com/free-icons/maps-and-location" title="maps and location icons">Maps and location icons created by Noplubery - Flaticon</a>
+    `;
+    div.appendChild(references);
+
+    button.addEventListener('click', function() {
+        if (references.style.display === 'none') {
+            references.style.display = 'block';
+        } else {
+            references.style.display = 'none';
+        }
+    });
+
+    return div;
+}
+
+
+
 
 
 
@@ -742,5 +765,6 @@ crearListado("assets/interface/public-service.png", 'Servicios Esenciales',color
 crearListado("assets/interface/territories.png", 'Territorios',colorTerritorios, crearCapas(capasTerritorios,colorTerritorios));
 crearListado("assets/interface/sustainable.png", 'Sustentabilidad',colorSustentabilidad, crearCapas(capasSustentabilidad,colorSustentabilidad));
 crearListado("assets/interface/save-water.png", 'Hidrología',colorHidrologia, crearCapas(capasHidrologia,colorHidrologia));
+crearListado("assets/interface/info.png", 'Información', colorInformación, crearInformacion());
 
 //paleta de colores https://coolors.co/b9e7aa
