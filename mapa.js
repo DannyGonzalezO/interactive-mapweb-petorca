@@ -21,19 +21,6 @@ var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png'
 	attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
 });
 
-// /* Función para leer en coordenadas la selección de locaciones. */
-// document.getElementById('select').addEventListener('change', function (e) {
-//     let coords = e.target.value.split(",");
-//     map.flyTo(coords, 13);
-// }
-// );
-
-// /* Mapa base para el minimapa */
-// var carto_light = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {attribution: '©OpenStreetMap, ©CartoDB', subdomains: 'abcd', maxZoom: 24});
-
-// /* Se agrega el minimapa */
-// var minimap = new L.Control.MiniMap(carto_light, { toggleDisplay: true, minimized: false, position: 'bottomleft' }).addTo(map);
-
 /* Se agrega la escala de distancia */
 new L.control.scale({imperial: false}).addTo(map);
 
@@ -52,29 +39,6 @@ function popup(feature, layer) {
 
 
 
-
-// /* Se agrega la leyenda */
-// var legend = L.control.Legend({position: 'bottomright', collapsed: false, symbolWidth: 24,opacity:1,column:1,
-// legends:[
-//     {
-//         label: "Áreas",
-//         type: "rectangle",
-//         color: "#0074f0",
-//         fillColor: "#009ff0",
-//         weight: 2,
-//         layers: areasJS,areas
-//     },
-//     {
-//         label: "Puntos de reciclaje",
-//         type: "point",
-//         color: "#0000ff",
-//         fillColor: "#0000ff",
-//         fillOpacity: 0.5,
-//         weight: 1,
-//         layers: reciclajeJS,reciclaje
-//     }
-// ]
-// }).addTo(map);
 
 /* Se agrega Control para desplegar datos al pasar el mouse */
 var info = L.control();
@@ -185,8 +149,6 @@ function onEachFeature(feature, layer) {
 
 
 /* Se agregan las capas GeoJSON*/
-//L.geoJson(areas).addTo(map);
-//L.geoJson(reciclaje).addTo(map);
 /* En cada click, se hace lo descrito por la funcion onEachFeature */
 /* Se crea una capa para cada conjunto de datos GeoJSON */
 allData.forEach(function(item) {
@@ -210,15 +172,6 @@ const volar = (coords) => {
     const zoom = map.getMaxZoom();
     map.flyTo(coords, zoom);
 }
-
-/* Se agrega función para llamar una alerta que muestre las coordenadas del lugar */
-
-// const definirAlert = ([lat, lng]) => {
-//     alert.classList.remove('hidden');
-//     alert.innerText = `Coordenadas:
-//     Latitud: ${lat},
-//     Longitud: ${lng}`;
-// }
 
 
 /* Limpiar opciones de la barra lateral */
@@ -578,56 +531,71 @@ $(function () {
 
 // Se definen las capas correspondientes a la categoria "Territorios"
 // // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
+
 const capasTerritorios = [
-    { name: 'Comuna Petorca', layer: comuna_petorcaJS },
-    { name: 'Comunas IV y V Región', layer: comunas_4_5_regionJS },
-    { name: 'Límites Unidades Vecinales', layer: limites_uni_vecinalesJS },
-    { name: 'Poblados', layer: pobladosJS }
+    { name: 'Atractivos turisticos 2020 Petorca Sernatur', layer: Atractivos_turísticos_2020_Petorca_Sernatur_JS },
+    { name: 'Comunas IV y V region', layer: Comunas_4ta_y_5ta_region_JS },
+    { name: 'Comuna Petorca', layer: Comuna_Petorca_JS },
+    { name: 'Limites Unidades Vecinales', layer: Limites_Unidades_Vecinales_Petorca_JS },
+    { name: 'Poblados', layer: Poblados_Petorca_JS },
+    { name: 'Puntos Críticos Emergencia', layer: Puntos_Críticos_Emergencia_JS },
+    { name: 'Quebradas y cursos de agua', layer: Quebradas_y_cursos_de_agua_JS },
+    { name: 'Red Hídrica Cuenca Rio Petorca', layer: Red_Hídrica_Cuenca_Rio_Petorca_JS },
+    { name: 'Red PRE 2018 Petorca', layer: Red_PRE_2018_Petorca_JS },
+    { name: 'Sendero de Chile Petorca', layer: Sendero_de_Chile_Petorca_JS },
+    { name: 'Unidades vecinales 2017', layer: Unidades_vecinales_2017_Petorca_JS },
 ];
 
 const capasSustentabilidad = [
-    { name: 'Áreas verdes', layer: areasverdesJS },
-    { name: 'Clima Koppen en Petorca', layer: climakoppenJS },
-    { name: 'Estadísticas fluviométricas vigentes con datos', layer: fluviometricasJS },
-    { name: 'Estadísticas meteorologicas vigentes con datos', layer: meteorologicasJS },
-    { name: 'Humedales', layer: humedalesJS },
-    { name: 'Formaciones vegetacionales Gajardo', layer: vegetacionalesJS }
+    { name: 'Áreas verdes', layer: Areas_Verdes_2023_JS },
+    { name: 'Campañas reciclaje de vidrio', layer: Campanas_reciclaje_de_vidrio_1_JS },
+    { name: 'Clima Koppen en Petorca', layer: Clima_Koppen_Petorca_JS },
+    { name: 'Estadísticas fluviométricas vigentes con datos', layer: Est_Fluviométricas_vigentes_con_datos_Petorca_JS },
+    { name: 'Estadísticas meteorologicas vigentes con datos', layer: Est_Meteorologicas_vigente_con_datos_Petorca_JS },
+    { name: 'Formaciones vegetacionales Gajardo', layer: Formaciones_vegetacionales_Gajardo_JS },
+    { name: 'Humedales', layer: Humedales_Petorca_JS },
+    { name: 'Pisos Vegetacionales Pliscoff', layer: Pisos_Vegetacionales_Pliscoff_Petorca_JS },
+    { name: 'Puntos Verdes y Limpios', layer: Puntos_Verdes_y_Limpios_JS },
+    { name: 'Sitios Prioritarios', layer: Sitios_Prioritarios_Petorca_JS },
 ];
 
+
 const capasHidrologia = [
-    { name: 'Sistemas de Servicio Sanitario Rural, SSR (ex APR)', layer: apr_ssrJS },
-    { name: 'CASUB: Comunidad de Aguas Subterráneas', layer: casub_plqJS },
-    { name: 'Cuenca completa río Petorca', layer: cuenca_rio_petorcaJS },
-    { name: 'DAA cuenca río Petorca 1956', layer: daa_cuenca_rio_petorca_1956JS },
-    { name: 'DAA cuenca río Petorca 1969', layer: daa_cuenca_rio_petorca_1969JS },
-    { name: 'DAA cuenca río Petorca 1984', layer: daa_cuenca_rio_petorca_1984JS },
-    { name: 'Estaciones calidad de agua', layer: estaciones_calidad_de_aguaJS },
-    { name: 'Obras subt registradas MEE comuna de Petorca', layer: obras_subt_reg_meeJS },
-    { name: 'Obras subt registradas MEE cuenca del río Petorca', layer: obras_subt_reg_mee_cuenca_rioJS },
-    { name: 'Plantas de tratamiento de aguas servidas ESVAL', layer: plantas_tratamiento_aguas_servidas_esvalJS }
+    { name: 'Sistemas de Servicio Sanitario Rural, SSR (ex APR)', layer: APR_SSRJS },
+    { name: 'Cuenca completa río Petorca', layer: Cuenca_completa_Rio_PetorcaJS },
+    { name: 'DAA cuenca río Petorca 1956', layer: DAA_Cuenca_Rio_Petorca_1956_JS },
+    { name: 'DAA cuenca río Petorca 1969', layer: DAA_Cuenca_Rio_Petorca_1969_JS },
+    { name: 'DAA cuenca río Petorca 1984', layer: DAA_Cuenca_Rio_Petorca_1984_JS },
+    { name: 'Estaciones de calidad de agua', layer: Estaciones_de_calidad_de_agua_Petorca_JS },
+    { name: 'Obras subt registradas MEE comuna de Petorca', layer: Obras_Subt_Registradas_MEE_Comuna_Petorca_JS },
+    { name: 'Obras subt registradas MEE cuenca del río Petorca', layer: Obras_Subt_Registradas_MEE_Cuenca_Río_Petorca_JS },
+    { name: 'Plantas de tratamiento de aguas servidas ESVAL', layer: Plantas_de_Tratamiento_de_Aguas_Servidas_ESVAL_JS },
+    { name: 'Poligonos de protección derechos del agua DGA', layer: Poligonos_de_protección_derechos_agua_DGA__JS },
+    { name: 'PTAS Petorca', layer: PTAS_Petorca__JS },
+    { name: 'Red Aducción', layer: Red_Aducción_JS },
 
 ];
 
 const capasComunicacion = [
-    { name: 'Antenas de servicio en Petorca', layer: antenas_servicio_petorcaJS }
+    { name: 'Antenas de servicio', layer: Antenas_Servicio_petorca_JS },
 ];
 
 const capasEducacion = [
-    { name: 'Establecimientos de educación parvularia', layer: estab_educ_parvulariaJS },
-    { name: 'Establecimientos educacionales', layer: estab_educacionalesJS },
-    { name: 'Jardines infantiles JUNJI', layer: jardines_infantiles_junjiJS },
-    { name: 'Jardines INTEGRA', layer: jardines_integraJS },
+    { name: 'Establecimientos educacionales', layer: Establ_educacionales_Petorca_JS },
+    { name: 'Establecimientos de educación parvularia', layer: Estab_Educ_parvularia_Petorca_JS },
+    { name: 'Jardines Infantiles JUNJI', layer: Jardines_Infantiles_JUNJI_JS },
+    { name: 'Jardines Integra', layer: Jardines_Integra_Petorca_JS },
 ];
 
 const capasSalud = [
-    { name: 'Establecimientos de salud', layer: estab_saludJS }
+    { name: 'Establecimientos de salud', layer: Establecimientos_de_salud_Petorca_JS },
 ];
 
 const capasSeguridad = [
-    { name: 'Carabineros', layer: carabinerosJS },
-    { name: 'Compañías de bomberos', layer: compañias_bomberosJS },
-    { name: 'Grifos', layer: grifosJS },
-    { name: 'Municipalidad', layer: municipalidadJS }
+    { name: 'Carabineros', layer: Carabineros_Petorca_JS },
+    { name: 'Compañias de bomberos Pet', layer: Compañias_de_bomberos_Pet_JS },
+    { name: 'Grifos', layer: Grifos_Petorca_JS },
+    { name: 'Municipalidad de Petorca', layer: Municipalidad_Petorca_JS },
 ];
 
 const todasLasCapas = [
@@ -647,13 +615,17 @@ var markerToLayer = new Map();
 
 
 todasLasCapas.forEach(capa => {
-    capa.layer.eachLayer(marker => {
-        marker.feature.properties.title = capa.name;
-        // Agrega el marcador y la capa al mapeo
-        markerToLayer.set(marker, capa.layer);
-    });
-    searchLayer.addLayer(capa.layer);
-    map.removeLayer(capa.layer); // Oculta la capa
+    if (capa.layer && typeof capa.layer.eachLayer === 'function') {
+        capa.layer.eachLayer(marker => {
+            marker.feature.properties.title = capa.name;
+            // Agrega el marcador y la capa al mapeo
+            markerToLayer.set(marker, capa.layer);
+        });
+        searchLayer.addLayer(capa.layer);
+        map.removeLayer(capa.layer); // Oculta la capa
+    } else {
+        console.error(`La capa ${capa.name} no es una capa de Leaflet válida.`);
+    }
 });
 
 var controlSearch = new L.Control.Search({
