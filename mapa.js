@@ -29,7 +29,7 @@ function popup(feature, layer) {
     if (feature.properties) {
         let popupContent = '';
         for (let prop in feature.properties) {
-            if (prop !== 'id') { // Skip the 'id' property
+            if (prop !== 'id') { 
                 popupContent += `<strong>${prop}:</strong> ${feature.properties[prop]}<br/>`;
             }
         }
@@ -54,10 +54,10 @@ info.onAdd = function(map){
 info.update = function(props){
     if (props && props.Nombre) {
         this._div.innerHTML = '<h4>Nombre</h4>' + '<b>' + props.Nombre + '</b><br />';
-        this._div.style.display = 'block'; // Show the div
+        this._div.style.display = 'block'; 
     } else {
         this._div.innerHTML = '';
-        this._div.style.display = 'none'; // Hide the div
+        this._div.style.display = 'none'; 
     }
 };
 
@@ -204,7 +204,6 @@ const crearLista = () => {
             li.classList.add('active');
             li.style.border = '2px solid blue';
             volar(lugar.coordenadas);
-            //definirAlert(lugar.coordenadas);
         })
     })
 
@@ -214,15 +213,13 @@ const crearLista = () => {
 // Control para ver las capas visibles
 var VisibleLayersControl = L.Control.extend({
     options: {
-        position: 'topleft' // Position of the control
+        position: 'topleft' 
     },
 
     onAdd: function (map) {
-        // Create the control container
         var controlContainer = L.DomUtil.create('div');
         controlContainer.style.display = 'flex';
 
-        // Create the control button
         var button = L.DomUtil.create('button', '', controlContainer);
         button.style.backgroundColor = 'white';
         button.style.backgroundImage = 'url(/assets/interface/layers.png)';
@@ -233,16 +230,14 @@ var VisibleLayersControl = L.Control.extend({
         button.style.borderRadius = '3px';
         button.style.padding = '10px';
 
-        // Create the container for the visible layers
         var container = L.DomUtil.create('div', '', controlContainer);
         container.id = 'visible-layers';
         container.style.display = 'none';
-        container.style.backgroundColor = 'white'; // Set the background color to white
-        container.style.margin = '10px'; // Add some space between the button and the container
-        container.style.padding = '10px'; // Add some space around the content
-        container.style.border = 'solid 1px #999'; // Add a border around the container
+        container.style.backgroundColor = 'white'; 
+        container.style.margin = '10px'; 
+        container.style.padding = '10px'; 
+        container.style.border = 'solid 1px #999'; 
 
-        // Add event listener to the button
         L.DomEvent.addListener(button, 'click', function () {
             if (container.style.display === 'none') {
                 container.style.display = 'block';
@@ -254,7 +249,6 @@ var VisibleLayersControl = L.Control.extend({
         return controlContainer;
     }
 });
-// Add your custom control to the map
 map.addControl(new VisibleLayersControl());
 
 /* Lista de colores para los marcadores */
@@ -272,7 +266,7 @@ function crearCapas(capas, color) {
         }
         return randomColor;
     }
-    // Create checkboxes for each layer
+    // Crea checkboxes para cada capa
     capas.forEach(capa => {
         const label = document.createElement('label');
         label.innerText = capa.name;
@@ -284,7 +278,7 @@ function crearCapas(capas, color) {
 
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
-        checkbox.checked = false; // The layer is not visible initially
+        checkbox.checked = false; // Por defecto, las capas están ocultas
         checkbox.style.display = 'none';
 
         // Genera un color aleatorio para la capa
@@ -318,7 +312,7 @@ function crearCapas(capas, color) {
                     }
                 });
         
-                // Add the title and color of the layer to the container
+                
                 var layerInfo = document.createElement('div');
                 layerInfo.textContent = capa.name;
         
@@ -334,7 +328,7 @@ function crearCapas(capas, color) {
             } else {
                 map.removeLayer(capa.layer);
         
-                // Remove the title and color of the layer from the container
+                // Remueve la capa de la lista de capas visibles
                 for (var i = 0; i < container.childNodes.length; i++) {
                     if (container.childNodes[i].textContent === capa.name) {
                         container.removeChild(container.childNodes[i]);
@@ -363,16 +357,16 @@ function crearCapas(capas, color) {
             }
         });
 
-        // Create a break element
+        
         const spacer = document.createElement('div');
-        spacer.style.height = '10px'; // Cambia esto al alto que necesites
+        spacer.style.height = '10px';
         div.appendChild(spacer);
 
         label.appendChild(checkbox);
         label.appendChild(customCheckbox);
         div.appendChild(label);
 
-        spacer.style.height = '10px'; // Cambia esto al alto que necesites
+        spacer.style.height = '10px'; 
         div.appendChild(spacer);
     });
 
@@ -381,11 +375,9 @@ function crearCapas(capas, color) {
 
 /* Crea un acordeón con el título y el contenido especificados */
 function crearAcordeon(titulo, contenido) {
-    // Crear el elemento del acordeón
     const accordionItem = document.createElement('div');
     accordionItem.classList.add('accordion-item');
 
-    // Crear el encabezado del acordeón
     const accordionHeader = document.createElement('h2');
     accordionHeader.classList.add('accordion-header');
     accordionHeader.id = `${titulo}-header`;
@@ -396,8 +388,6 @@ function crearAcordeon(titulo, contenido) {
     accordionHeader.style.borderBottom = '2px solid black';
     accordionHeader.style.display = 'block';
     
-
-    // Crear el botón del acordeón
     const button = document.createElement('button');
     button.classList.add('accordion-button', 'collapsed');
     button.type = 'button';
@@ -406,12 +396,10 @@ function crearAcordeon(titulo, contenido) {
     button.textContent = titulo;
     button.style.textAlign = 'center';
 
-    // Add the arrow icon
     const arrowIcon = document.createElement('span');
     arrowIcon.classList.add('accordion-button-icon');
     button.appendChild(arrowIcon);
 
-    // Crear el contenido del acordeón
     const accordionCollapse = document.createElement('div');
     accordionCollapse.id = `${titulo}-collapse`;
     accordionCollapse.classList.add('accordion-collapse', 'collapse');
@@ -420,9 +408,8 @@ function crearAcordeon(titulo, contenido) {
 
     const accordionBody = document.createElement('div');
     accordionBody.classList.add('accordion-body');
-    accordionBody.appendChild(contenido); // Agregar el contenido como un elemento del DOM
+    accordionBody.appendChild(contenido);
 
-    // Agregar los elementos al acordeón
     accordionCollapse.appendChild(accordionBody);
     accordionHeader.appendChild(button);
     accordionItem.appendChild(accordionHeader);
@@ -433,29 +420,27 @@ function crearAcordeon(titulo, contenido) {
 
 
 /* Se agrega el listado de sitios para rellenar la barra lateral, siguiendo las listas de Bootstrap*/
-let currentOverlay = null; // Variable to keep track of the currently open overlay
+let currentOverlay = null; 
 
 function crearListado(imagen, titulo,color, contenido) {
-    // Create a div for the overlay
     const divOverlay = document.createElement('div');
-    divOverlay.id = 'overlay-' + imagen; // Unique ID for each overlay
-    divOverlay.classList.add('col-2'); // Add Bootstrap column class
+    divOverlay.id = 'overlay-' + imagen; 
+    divOverlay.classList.add('col-2');
     divOverlay.style.height = '100%';
     divOverlay.style.width = '250px';
     divOverlay.style.backgroundColor = 'white';
     divOverlay.style.color = 'black';
     divOverlay.style.fontFamily = 'Arial, sans-serif';
-    divOverlay.style.display = 'none'; // Hidden by default
-    divOverlay.style.zIndex = '1000'; // To appear above the map
+    divOverlay.style.display = 'none'; 
+    divOverlay.style.zIndex = '1000'; 
     divOverlay.style.padding = '0';
     divOverlay.style.borderRight = '2px solid black';
-    if (window.innerWidth <= 400) { // If the screen width is 600px or less
-        divOverlay.style.width = '20%'; // Use 100% width
+    if (window.innerWidth <= 400) {
+        divOverlay.style.width = '20%'; 
     } else {
-        divOverlay.style.width = '250px'; // Use 250px width
+        divOverlay.style.width = '250px';
     }
 
-    // Create a title element
     const titleElement = document.createElement('h2');
     titleElement.textContent = titulo;
     titleElement.style.color = 'black'; 
@@ -463,18 +448,13 @@ function crearListado(imagen, titulo,color, contenido) {
     titleElement.style.boxSizing = 'border-box';
     titleElement.style.width = '100%';
     titleElement.style.borderBottom = '2px solid black';
-    //justify the text
     titleElement.style.textAlign = 'center';
 
-
-    // Append the title to the overlay
     divOverlay.appendChild(titleElement);
 
-    // Append the overlay to the row div
     const row = document.querySelector('.row');
-    row.insertBefore(divOverlay, row.children[1]); // Insert the overlay after the sidebar
+    row.insertBefore(divOverlay, row.children[1]); 
 
-    // Move the list of places into the overlay
     divOverlay.appendChild(contenido);
 
     const button = document.createElement('button');
@@ -493,20 +473,20 @@ function crearListado(imagen, titulo,color, contenido) {
     
     button.addEventListener('click', () => {
         if (divOverlay.style.display === 'none') {
-            // If another overlay is open, close it
+            // Si hay un overlay abierto, se cierra
             if (currentOverlay) {
                 currentOverlay.style.display = 'none';
             }
 
-            divOverlay.style.display = 'block'; // Show the overlay
-            currentOverlay = divOverlay; // Update the currently open overlay
+            divOverlay.style.display = 'block'; 
+            currentOverlay = divOverlay;
         } else {
-            divOverlay.style.display = 'none'; // Hide the overlay
-            currentOverlay = null; // No overlay is open
+            divOverlay.style.display = 'none'; 
+            currentOverlay = null; 
         }
     });
 
-    // Create a container for the buttons if it doesn't exist
+
     let buttonContainer = document.getElementById('button-container');
     if (!buttonContainer) {
         buttonContainer = document.createElement('div');
@@ -519,7 +499,7 @@ function crearListado(imagen, titulo,color, contenido) {
         
     }
 
-    // Append the button to the button container
+    
     buttonContainer.appendChild(button);
 
 }
@@ -530,8 +510,6 @@ $(function () {
 
 
 // Se definen las capas correspondientes a la categoria "Territorios"
-// // Me gustaría tenerlo en un archivo separado, pero como dentro de mapa.js, se redefine cada layer, tengo que incluirlo acá para que no se sobreescriban las variables
-
 const capasTerritorios = [
     { name: 'Atractivos turisticos 2020 Petorca Sernatur', layer: Atractivos_turísticos_2020_Petorca_Sernatur_JS },
     { name: 'Comunas IV y V region', layer: Comunas_4ta_y_5ta_region_JS },
@@ -546,6 +524,7 @@ const capasTerritorios = [
     { name: 'Unidades vecinales 2017', layer: Unidades_vecinales_2017_Petorca_JS },
 ];
 
+// Se definen las capas correspondientes a la categoria "Sustentabilidad"
 const capasSustentabilidad = [
     { name: 'Áreas verdes', layer: Areas_Verdes_2023_JS },
     { name: 'Campañas reciclaje de vidrio', layer: Campanas_reciclaje_de_vidrio_1_JS },
@@ -559,7 +538,7 @@ const capasSustentabilidad = [
     { name: 'Sitios Prioritarios', layer: Sitios_Prioritarios_Petorca_JS },
 ];
 
-
+// Se definen las capas correspondientes a la categoria "Hidrología"
 const capasHidrologia = [
     { name: 'Sistemas de Servicio Sanitario Rural, SSR (ex APR)', layer: APR_SSRJS },
     { name: 'Cuenca completa río Petorca', layer: Cuenca_completa_Rio_PetorcaJS },
@@ -576,10 +555,12 @@ const capasHidrologia = [
 
 ];
 
+// Se definen las capas correspondientes a la categoria "Comunicación"
 const capasComunicacion = [
     { name: 'Antenas de servicio', layer: Antenas_Servicio_petorca_JS },
 ];
 
+// Se definen las capas correspondientes a la categoria "Educación"
 const capasEducacion = [
     { name: 'Establecimientos educacionales', layer: Establ_educacionales_Petorca_JS },
     { name: 'Establecimientos de educación parvularia', layer: Estab_Educ_parvularia_Petorca_JS },
@@ -587,10 +568,12 @@ const capasEducacion = [
     { name: 'Jardines Integra', layer: Jardines_Integra_Petorca_JS },
 ];
 
+// Se definen las capas correspondientes a la categoria "Salud"
 const capasSalud = [
     { name: 'Establecimientos de salud', layer: Establecimientos_de_salud_Petorca_JS },
 ];
 
+// Se definen las capas correspondientes a la categoria "Seguridad"
 const capasSeguridad = [
     { name: 'Carabineros', layer: Carabineros_Petorca_JS },
     { name: 'Compañias de bomberos Pet', layer: Compañias_de_bomberos_Pet_JS },
@@ -598,6 +581,7 @@ const capasSeguridad = [
     { name: 'Municipalidad de Petorca', layer: Municipalidad_Petorca_JS },
 ];
 
+// Se definen todas las capas
 const todasLasCapas = [
     ...capasTerritorios,
     ...capasSustentabilidad,
@@ -632,7 +616,7 @@ var controlSearch = new L.Control.Search({
     layer: searchLayer,
     initial: false,
     hideMarkerOnCollapse: true,
-    propertyName: 'title', // Campo que se utilizará para la búsqueda
+    propertyName: 'title', // Campo que se utilizará para la búsqueda, en este caso, su titulo
     marker:false
 });
 
