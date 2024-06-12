@@ -222,7 +222,7 @@ var VisibleLayersControl = L.Control.extend({
 
         var button = L.DomUtil.create('button', '', controlContainer);
         button.style.backgroundColor = 'white';
-        button.style.backgroundImage = 'url(/assets/interface/layers.png)';
+        button.style.backgroundImage = 'url(assets/interface/layers.png)';
         button.style.width = '32px';
         button.style.height = '32px';
         button.style.backgroundSize = 'cover';
@@ -666,11 +666,11 @@ function crearInformacion() {
     div.style.padding = '10px';
     var text = document.createElement('p');
     var infoText1 = 'Este es el Visor interactivo de la Municipalidad de Petorca.<br><br> Puede presionar uno de los iconos de la barra lateral para agregar las capas al mapa.<br><br> Presionando el botón ';
-    var imgLayers = '/assets/interface/layers.png';
+    var imgLayers = 'assets/interface/layers.png';
     var infoText2 = ' podrás ver las capas activas y sus colores.<br><br> Presionando el botón ';
-    var imgSearch = '/assets/interface/search.png';
+    var imgSearch = 'assets/interface/search.png';
     var infoText3 = ' podrás buscar las capas por su nombre y activarlas ahí.<br><br> Presionando el botón ';
-    var imgWorld = '/assets/interface/worldwide.png';
+    var imgWorld = 'assets/interface/worldwide.png';
     var infoText4 = ' podrás cambiar la imágen del mapa de fondo.';
     
     text.innerHTML = infoText1 + '<img src="' + imgLayers + '" alt="Icono de capas" style="width: 20px; height: 20px;">' + infoText2 + '<img src="' + imgSearch + '" alt="Icono de búsqueda" style="width: 20px; height: 20px;">' + infoText3 + '<img src="' + imgWorld + '" alt="Icono de mundo" style="width: 20px; height: 20px;">' + infoText4;
